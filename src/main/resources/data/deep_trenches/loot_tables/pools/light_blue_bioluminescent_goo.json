@@ -1,0 +1,17 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 2,
+        "max": 3
+      },
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "deep_trenches:light_blue_bioluminescent_goo"
+        }
+      ]
+    }
+  ]
+}

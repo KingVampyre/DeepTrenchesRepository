@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"half=upper": {
+			"model": "deep_trenches:block/glow_forest_coral_top"
+		},
+		"half=lower": {
+			"model": "deep_trenches:block/glow_forest_coral_bottom"
+		}
+	}
+}
