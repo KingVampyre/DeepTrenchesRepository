@@ -8,6 +8,7 @@ import static net.minecraft.state.properties.DoubleBlockHalf.UPPER;
 
 import javax.annotation.Nullable;
 
+import github.kingvampire.DeepTrenches.core.blocks.base.ModDeadCoralPlantBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,7 +23,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class DeadDoubleCoralBlock extends DeadCoralPlantBlock {
+public class DeadDoubleCoralBlock extends ModDeadCoralPlantBlock {
 
 	public DeadDoubleCoralBlock(Properties properties) {
 		super(properties);

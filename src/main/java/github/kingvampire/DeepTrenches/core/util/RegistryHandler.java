@@ -1,86 +1,92 @@
 package github.kingvampire.DeepTrenches.core.util;
 
+import static github.kingvampire.DeepTrenches.api.enums.CoralType.PIPE_ORGAN;
+import static github.kingvampire.DeepTrenches.api.enums.WoodType.GHOSHROOM;
+import static github.kingvampire.DeepTrenches.core.init.ItemGroups.GENERAL;
 import static github.kingvampire.DeepTrenches.core.init.ModBlocks.*;
-import static net.minecraft.block.Blocks.DEAD_TUBE_CORAL;
-import static net.minecraft.block.Blocks.DEAD_TUBE_CORAL_BLOCK;
-import static net.minecraft.block.Blocks.DEAD_TUBE_CORAL_FAN;
-import static net.minecraft.block.Blocks.TUBE_CORAL;
-import static net.minecraft.block.Blocks.TUBE_CORAL_BLOCK;
-import static net.minecraft.block.Blocks.TUBE_CORAL_FAN;
+import static github.kingvampire.DeepTrenches.core.util.Constants.MODID;
+import static net.minecraft.block.Blocks.COCOA;
+import static net.minecraft.block.material.MaterialColor.GRAY;
+import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import github.kingvampire.DeepTrenches.core.blocks.CoralFanBlock;
-import github.kingvampire.DeepTrenches.core.blocks.CoralPlantBlock;
-import github.kingvampire.DeepTrenches.core.blocks.DeadCoralFanBlock;
-import github.kingvampire.DeepTrenches.core.blocks.DeadCoralPlantBlock;
-import github.kingvampire.DeepTrenches.core.blocks.DeadDoubleCoralBlock;
-import github.kingvampire.DeepTrenches.core.blocks.DoubleCoralBlock;
-import github.kingvampire.DeepTrenches.core.init.ItemGroups;
+import com.google.common.collect.Maps;
+
+import github.kingvampire.DeepTrenches.api.enums.CoralType;
 import net.minecraft.block.Block;
-import net.minecraft.block.CoralBlock;
+import net.minecraft.block.Block.Properties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.world.RegisterDimensionsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.IForgeRegistry;
 
-@EventBusSubscriber(bus = Bus.MOD)
+@EventBusSubscriber(bus = MOD)
 public class RegistryHandler {
 
 	@SubscribeEvent
 	public static void registerBlocks(Register<Block> event) {
 		List<Block> blocks = new ArrayList<>();
 
-		Block.Properties coralBlockProps = Block.Properties.from(TUBE_CORAL_BLOCK);
-		Block.Properties deadCoralBlockProps = Block.Properties.from(DEAD_TUBE_CORAL_BLOCK);
-		Block.Properties coralProps = Block.Properties.from(TUBE_CORAL);
-		Block.Properties deadCoralProps = Block.Properties.from(DEAD_TUBE_CORAL);
-		Block.Properties fanProps = Block.Properties.from(TUBE_CORAL_FAN);
-		Block.Properties deadFanProps = Block.Properties.from(DEAD_TUBE_CORAL_FAN);
+		for (CoralType coralType : CoralType.values()) {
+			Block deadBlock = coralType.deadBlock();
+			Block deadCoral = coralType.deadCoral();
+			Block deadFan = coralType.deadFan();
 
-		String[] corals = new String[] { "blackgreen_tree", "bubblegum", "cabbage_tree", "flowertube", "garnet_spiral",
-				"glow_forest", "glowtongue_tube", "ivory", "lime_brain", "lophelia", "pipe_organ", "red_tree", "seafan",
-				"straight_willow", "sunrise", "table", "thin_blade", "trumpetear" };
+			blocks.add(deadBlock);
+			blocks.add(coralType.coralBlock(deadBlock));
+			blocks.add(deadCoral);
+			blocks.add(coralType.coral(deadCoral));
+			blocks.add(deadFan);
+			blocks.add(coralType.fan(deadFan));
 
-		Arrays.asList(corals).forEach(coral -> {
-			Block deadCoralBlock = new Block(deadCoralBlockProps);
-			Block coralBlock = new CoralBlock(deadCoralBlock, coralBlockProps);
+			if (coralType == PIPE_ORGAN) {
+				Block deadTentacles = coralType.deadTentacles();
 
-			Block deadCoralPlant = coral.equals("glow_forest") ? new DeadDoubleCoralBlock(deadCoralProps)
-					: new DeadCoralPlantBlock(deadCoralProps);
+				blocks.add(deadTentacles);
+				blocks.add(coralType.tentacles(deadTentacles));
+			}
+		}
 
-			Block coralPlant = coral.equals("glow_forest") ? new DoubleCoralBlock(deadCoralPlant, coralProps)
-					: new CoralPlantBlock(deadCoralPlant, coralProps);
+		Properties biolum = Properties.create(ROCK, GRAY).hardnessAndResistance(1.5F, 6F).lightValue(15);
 
-			Block deadFan = new DeadCoralFanBlock(deadFanProps);
-			Block fan = new CoralFanBlock(deadFan, fanProps);
+		mapToBlock.put("cyan_bioluminescent_coral", biolum);
+		mapToBlock.put("green_bioluminescent_coral", biolum);
+		mapToBlock.put("light_blue_bioluminescent_coral", biolum);
 
-			blocks.add(Resources.attach(coral + "_coral_block", coralBlock));
-			blocks.add(Resources.attach("dead_" + coral + "_coral_block", deadCoralBlock));
-			blocks.add(Resources.attach(coral + "_coral", coralPlant));
-			blocks.add(Resources.attach("dead_" + coral + "_coral", deadCoralPlant));
-			blocks.add(Resources.attach(coral + "_coral_fan", fan));
-			blocks.add(Resources.attach("dead_" + coral + "_coral_fan", deadFan));
-		});
+		IForgeRegistry<Block> registry = event.getRegistry();
 
-		Block deadPipeOrgan = new DeadCoralPlantBlock(deadCoralProps);
+		for (Block block : blocks) {
+			registry.register(block);
+		}
 
-		blocks.add(Resources.attach("dead_pipe_organ_tentacles", deadPipeOrgan));
-		blocks.add(Resources.attach("pipe_organ_tentacles", new CoralPlantBlock(deadPipeOrgan, coralProps)));
+		for (Entry<String, Block> entry : map.entrySet()) {
+			ResourceLocation id = new ResourceLocation(MODID, entry.getKey());
+			Block block = entry.getValue();
 
-		Block.Properties bioluminescence = coralBlockProps.lightValue(15);
+			registry.register(block.setRegistryName(id));
+		}
 
-		blocks.add(Resources.attach("cyan_bioluminescent_coral", bioluminescence));
-		blocks.add(Resources.attach("green_bioluminescent_coral", bioluminescence));
-		blocks.add(Resources.attach("light_blue_bioluminescent_coral", bioluminescence));
+		for (Entry<String, Properties> entry : mapToBlock.entrySet()) {
+			ResourceLocation id = new ResourceLocation(MODID, entry.getKey());
+			Block block = new Block(entry.getValue());
 
-		blocks.forEach(event.getRegistry()::register);
+			registry.register(block.setRegistryName(id));
+		}
+
+	}
+
+	@SubscribeEvent
+	public static void registerDimensions(RegisterDimensionsEvent event) {
+
 	}
 
 	@SubscribeEvent
@@ -95,18 +101,17 @@ public class RegistryHandler {
 
 	@SubscribeEvent
 	public static void registerItems(Register<Item> event) {
-		Item.Properties props = new Item.Properties().group(ItemGroups.GENERAL);
+		Map<String, Item.Properties> map = Maps.newHashMap();
 
 		List<Block> blocks = new ArrayList<>();
-		List<Item> items = new ArrayList<>();
 
 		blocks.add(CYAN_BIOLUMINESCENT_CORAL);
 		blocks.add(GREEN_BIOLUMINESCENT_CORAL);
 		blocks.add(LIGHT_BLUE_BIOLUMINESCENT_CORAL);
 
-		items.add(Resources.attach("cyan_bioluminescent_goo", props));
-		items.add(Resources.attach("light_blue_bioluminescent_goo", props));
-		items.add(Resources.attach("green_bioluminescent_goo", props));
+		map.put("cyan_bioluminescent_goo", new Item.Properties().group(GENERAL));
+		map.put("light_blue_bioluminescent_goo", new Item.Properties().group(GENERAL));
+		map.put("green_bioluminescent_goo", new Item.Properties().group(GENERAL));
 
 		blocks.add(BLACKGREEN_TREE_CORAL_BLOCK);
 		blocks.add(BUBBLEGUM_CORAL_BLOCK);
@@ -224,14 +229,23 @@ public class RegistryHandler {
 		blocks.add(DEAD_THIN_BLADE_CORAL_FAN);
 		blocks.add(DEAD_TRUMPETEAR_CORAL_FAN);
 
-		blocks.stream().map(block -> {
+		IForgeRegistry<Item> register = event.getRegistry();
+
+		for (Block block : blocks) {
+			Item.Properties props = new Item.Properties().group(GENERAL);
+
+			ResourceLocation id = block.getRegistryName();
 			Item item = new BlockItem(block, props);
 
-			item.setRegistryName(block.getRegistryName());
+			register.register(item.setRegistryName(id));
+		}
 
-			return item;
-		}).forEach(event.getRegistry()::register);
+		for (Entry<String, Item.Properties> entry : map.entrySet()) {
+			ResourceLocation id = new ResourceLocation(MODID, entry.getKey());
+			Item item = new Item(entry.getValue());
 
-		items.stream().forEach(event.getRegistry()::register);
+			register.register(item.setRegistryName(id));
+		}
+
 	}
 }

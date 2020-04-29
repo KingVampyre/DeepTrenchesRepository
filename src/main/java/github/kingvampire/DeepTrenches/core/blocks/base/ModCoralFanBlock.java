@@ -1,4 +1,4 @@
-package github.kingvampire.DeepTrenches.core.blocks;
+package github.kingvampire.DeepTrenches.core.blocks.base;
 
 import java.util.Random;
 
@@ -7,11 +7,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CoralFanBlock extends DeadCoralFanBlock {
+public class ModCoralFanBlock extends ModDeadCoralFanBlock {
 
 	private Block deadBlock;
 
-	public CoralFanBlock(Block deadBlock, Properties properties) {
+	public ModCoralFanBlock(Block deadBlock, Properties properties) {
 		super(properties);
 
 		this.deadBlock = deadBlock;

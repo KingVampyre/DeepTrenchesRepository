@@ -6,13 +6,6 @@ bin
 .classpath
 .project
 
-# vscode
-.vscode
-
-# cache
-usercache.json
-usernamecache.json
-
 # idea
 out
 *.ipr
