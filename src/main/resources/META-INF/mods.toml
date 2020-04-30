@@ -7,7 +7,7 @@ issueTrackerURL="https://github.com/KingVampyre/DeepTrenchesRepository/issues"
 [[mods]] #mandatory
 
 modId="deep_trenches"
-version="1.0.0-alpha"
+version="1.0.0-20w18a"
 displayName="Deep Trenches"
 authors="KingVampire and Louwind"
 

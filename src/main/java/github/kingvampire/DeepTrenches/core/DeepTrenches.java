@@ -7,9 +7,11 @@ import github.kingvampire.DeepTrenches.api.loot_tables.conditions.CheckWoodType;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
 import github.kingvampire.DeepTrenches.core.entity.BoatEntityDT;
 import github.kingvampire.DeepTrenches.core.entity.SignTileEntityDT;
+import github.kingvampire.DeepTrenches.core.entity.StaspEntity;
 import github.kingvampire.DeepTrenches.core.entity.renderer.AdaiggerRenderer;
 import github.kingvampire.DeepTrenches.core.entity.renderer.BoatRendererDT;
 import github.kingvampire.DeepTrenches.core.entity.renderer.SignTileEntityDTRenderer;
+import github.kingvampire.DeepTrenches.core.entity.renderer.StaspRenderer;
 import github.kingvampire.DeepTrenches.core.proxy.ClientProxy;
 import github.kingvampire.DeepTrenches.core.proxy.CommonProxy;
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
@@ -38,6 +40,7 @@ public class DeepTrenches {
 
 		RenderingRegistry.registerEntityRenderingHandler(AdaiggerEntity.class, AdaiggerRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(BoatEntityDT.class, BoatRendererDT::new);
+		RenderingRegistry.registerEntityRenderingHandler(StaspEntity.class, StaspRenderer::new);
 	}
 
 	private void loadComplete(FMLLoadCompleteEvent event) {

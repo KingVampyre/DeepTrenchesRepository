@@ -400,6 +400,7 @@ public class ModBlocks {
 	public static final Block SPROOM_TRAPDOOR = null;
 	public static final Block SPROOM_WALL_SIGN = null;
 	public static final Block SPROOM_WOOD = null;
+	public static final Block STASP_NEST = null;
 	public static final Block STORTREEAN_BUTTON = null;
 	public static final Block STORTREEAN_DOOR = null;
 	public static final Block STORTREEAN_FENCE = null;

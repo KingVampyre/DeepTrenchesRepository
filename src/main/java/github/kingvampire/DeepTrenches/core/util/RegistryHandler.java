@@ -37,6 +37,8 @@ import github.kingvampire.DeepTrenches.core.enchantments.DrainingEnchantment;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
 import github.kingvampire.DeepTrenches.core.entity.BoatEntityDT;
 import github.kingvampire.DeepTrenches.core.entity.SignTileEntityDT;
+import github.kingvampire.DeepTrenches.core.entity.StaspEntity;
+import github.kingvampire.DeepTrenches.core.entity.StaspNestTileEntity;
 import github.kingvampire.DeepTrenches.core.items.AdaiggerItem;
 import github.kingvampire.DeepTrenches.core.items.BoatItemDT;
 import github.kingvampire.DeepTrenches.core.potion.DrainingEffect;
@@ -203,8 +205,12 @@ public class RegistryHandler {
 		EntityType<BoatEntityDT> boat = EntityType.Builder.<BoatEntityDT>create(BoatEntityDT::new, MISC)
 				.size(1.375F, 0.5625F).setCustomClientFactory(BoatEntityDT::new).build(MODID + ".boat");
 
+		EntityType<StaspEntity> stasp = EntityType.Builder.<StaspEntity>create(StaspEntity::new, MISC).size(0.7F, 0.6F)
+				.setCustomClientFactory(StaspEntity::new).build(MODID + ".stasp");
+
 		types.add(adaigger.setRegistryName(new ResourceLocation(MODID, "adaigger")));
 		types.add(boat.setRegistryName(new ResourceLocation(MODID, "boat")));
+		types.add(stasp.setRegistryName(new ResourceLocation(MODID, "stasp")));
 
 		types.forEach(event.getRegistry()::register);
 	}
@@ -254,7 +260,7 @@ public class RegistryHandler {
 		map.put("green_bioluminescent_goo", new Item.Properties().group(GENERAL));
 
 		map.put("almond", new Item.Properties().group(GENERAL).food(SWEET_BERRIES));
-		map.put("almond_drupe", new Item.Properties().group(GENERAL).food(APPLE));
+		map.put("almond_drupe", new Item.Properties().group(GENERAL));
 		map.put("cherry", new Item.Properties().group(GENERAL).food(SWEET_BERRIES));
 		map.put("crolood_fruit", new Item.Properties().group(GENERAL).food(APPLE));
 		map.put("dark_crolood_fruit", new Item.Properties().group(GENERAL).food(APPLE));
@@ -279,6 +285,7 @@ public class RegistryHandler {
 		blocks.add(CYAN_BIOLUMINESCENT_CORAL);
 		blocks.add(GREEN_BIOLUMINESCENT_CORAL);
 		blocks.add(LIGHT_BLUE_BIOLUMINESCENT_CORAL);
+		blocks.add(STASP_NEST);
 
 		blocks.add(PINK_ROSE);
 		blocks.add(PINK_ROSE_BUSH);
