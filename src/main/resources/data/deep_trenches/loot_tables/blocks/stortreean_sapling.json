@@ -17,14 +17,14 @@
 							"condition": "minecraft:block_state_property",
 							"block": "deep_trenches:stortreean_sapling",
 							"properties": {
-								"half": "double"
+								"type": "double"
 							}
 						},
 						{
 							"condition": "minecraft:block_state_property",
 							"block": "deep_trenches:stortreean_sapling",
 							"properties": {
-								"half": "bottom"
+								"type": "bottom"
 							}
 						}
 					]
