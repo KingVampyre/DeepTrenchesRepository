@@ -9,6 +9,9 @@ import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.Anger;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.AngerStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.IAnger;
+import github.kingvampire.DeepTrenches.api.capabilities.breed.IBreed;
+import github.kingvampire.DeepTrenches.api.capabilities.breed.Breed;
+import github.kingvampire.DeepTrenches.api.capabilities.breed.BreedStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.group.Group;
 import github.kingvampire.DeepTrenches.api.capabilities.group.GroupStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.group.IGroup;
@@ -62,6 +65,7 @@ public class DeepTrenches {
 	CapabilityManager.INSTANCE.register(IAge.class, new AgeStorage(), Age::new);
 	CapabilityManager.INSTANCE.register(IAnger.class, new AngerStorage(), Anger::new);
 	CapabilityManager.INSTANCE.register(IGroup.class, new GroupStorage(), Group::new);
+	CapabilityManager.INSTANCE.register(IBreed.class, new BreedStorage(), Breed::new);
 	CapabilityManager.INSTANCE.register(ITame.class, new TameStorage(), Tame::new);
     }
 
