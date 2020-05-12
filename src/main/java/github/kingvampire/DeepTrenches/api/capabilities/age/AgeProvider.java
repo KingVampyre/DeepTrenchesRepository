@@ -31,12 +31,12 @@ public class AgeProvider implements ICapabilitySerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-	return (CompoundNBT) AGE_CAPABILITY.writeNBT(this.age.orElse(null), null);
+	return (CompoundNBT) AGE_CAPABILITY.writeNBT(this.age.orElseThrow(IllegalArgumentException::new), null);
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-	AGE_CAPABILITY.readNBT(this.age.orElse(null), null, nbt);
+	AGE_CAPABILITY.readNBT(this.age.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
 }

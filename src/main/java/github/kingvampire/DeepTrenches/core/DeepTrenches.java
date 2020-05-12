@@ -9,6 +9,9 @@ import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.Anger;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.AngerStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.IAnger;
+import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
+import github.kingvampire.DeepTrenches.api.capabilities.tame.Tame;
+import github.kingvampire.DeepTrenches.api.capabilities.tame.TameStorage;
 import github.kingvampire.DeepTrenches.api.loot_tables.conditions.CheckWoodType;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
 import github.kingvampire.DeepTrenches.core.entity.BoatEntityDT;
@@ -55,6 +58,7 @@ public class DeepTrenches {
     private void onCommonSetup(FMLCommonSetupEvent event) {
 	CapabilityManager.INSTANCE.register(IAge.class, new AgeStorage(), Age::new);
 	CapabilityManager.INSTANCE.register(IAnger.class, new AngerStorage(), Anger::new);
+	CapabilityManager.INSTANCE.register(ITame.class, new TameStorage(), Tame::new);
     }
 
     private void loadComplete(FMLLoadCompleteEvent event) {
