@@ -13,10 +13,10 @@ import net.minecraft.util.ResourceLocation;
 
 public class StaspRenderer extends MobRenderer<StaspEntity, StaspModel<StaspEntity>> {
 
-	public StaspRenderer(EntityRendererManager renderManager) {
-		super(renderManager, new StaspModel<>(), 0.75F);
+	public StaspRenderer(EntityRendererManager entityRenderManager) {
+		super(entityRenderManager, new StaspModel<>(), 0.75F);
 
-		this.addLayer(new StaspAntennasLayer<>(this));
+		this.addLayer(new StaspAntennasLayer<StaspEntity>(this));
 	}
 
 	@Override
