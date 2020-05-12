@@ -3,6 +3,9 @@ package github.kingvampire.DeepTrenches.core;
 import static github.kingvampire.DeepTrenches.core.util.Constants.MODID;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
+import github.kingvampire.DeepTrenches.api.capabilities.age.Age;
+import github.kingvampire.DeepTrenches.api.capabilities.age.AgeStorage;
+import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.Anger;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.AngerStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.IAnger;
@@ -50,6 +53,7 @@ public class DeepTrenches {
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
+	CapabilityManager.INSTANCE.register(IAge.class, new AgeStorage(), Age::new);
 	CapabilityManager.INSTANCE.register(IAnger.class, new AngerStorage(), Anger::new);
     }
 
