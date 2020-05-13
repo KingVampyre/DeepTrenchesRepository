@@ -18,8 +18,15 @@ build
 .gradle
 
 # other
+crash-reports
 eclipse
+logs
+options.txt
 run
+saves
+screenshots
+usercache.json
+usernamecache.json
 
 # Files from Forge MDK
 forge*changelog.txt

@@ -20,11 +20,15 @@ import github.kingvampire.DeepTrenches.api.capabilities.tame.Tame;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.TameStorage;
 import github.kingvampire.DeepTrenches.api.loot_tables.conditions.CheckWoodType;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
+import github.kingvampire.DeepTrenches.core.entity.BettaEntity;
 import github.kingvampire.DeepTrenches.core.entity.BoatEntityDT;
+import github.kingvampire.DeepTrenches.core.entity.DeepLakeBettaEntity;
 import github.kingvampire.DeepTrenches.core.entity.SignTileEntityDT;
 import github.kingvampire.DeepTrenches.core.entity.StaspEntity;
 import github.kingvampire.DeepTrenches.core.entity.renderer.AdaiggerRenderer;
+import github.kingvampire.DeepTrenches.core.entity.renderer.BettaRenderer;
 import github.kingvampire.DeepTrenches.core.entity.renderer.BoatRendererDT;
+import github.kingvampire.DeepTrenches.core.entity.renderer.DeepLakeBettaRenderer;
 import github.kingvampire.DeepTrenches.core.entity.renderer.SignTileEntityDTRenderer;
 import github.kingvampire.DeepTrenches.core.entity.renderer.StaspRenderer;
 import github.kingvampire.DeepTrenches.core.proxy.ClientProxy;
@@ -57,7 +61,9 @@ public class DeepTrenches {
 	ClientRegistry.bindTileEntitySpecialRenderer(SignTileEntityDT.class, new SignTileEntityDTRenderer());
 
 	RenderingRegistry.registerEntityRenderingHandler(AdaiggerEntity.class, AdaiggerRenderer::new);
+	RenderingRegistry.registerEntityRenderingHandler(BettaEntity.class, BettaRenderer::new);
 	RenderingRegistry.registerEntityRenderingHandler(BoatEntityDT.class, BoatRendererDT::new);
+	RenderingRegistry.registerEntityRenderingHandler(DeepLakeBettaEntity.class, DeepLakeBettaRenderer::new);
 	RenderingRegistry.registerEntityRenderingHandler(StaspEntity.class, StaspRenderer::new);
     }
 
