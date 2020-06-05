@@ -13,8 +13,8 @@ import static net.minecraft.util.math.RayTraceResult.Type.MISS;
 import java.util.List;
 import java.util.function.Predicate;
 
+import github.kingvampire.DeepTrenches.api.entity.ModBoatEntity;
 import github.kingvampire.DeepTrenches.api.enums.WoodType;
-import github.kingvampire.DeepTrenches.core.entity.BoatEntityDT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -62,7 +62,7 @@ public class BoatItemDT extends Item {
 		}
 
 		if (ray.getType() == BLOCK) {
-			BoatEntityDT boat = new BoatEntityDT(BOAT, worldIn);
+			ModBoatEntity boat = new ModBoatEntity(BOAT, worldIn);
 			Vec3d vec = ray.getHitVec();
 
 			boat.setWoodType(this.type);

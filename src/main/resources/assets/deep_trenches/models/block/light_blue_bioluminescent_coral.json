@@ -1,6 +1,0 @@
-{
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "deep_trenches:block/corals/blocks/light_blue_bioluminescent_coral"
-	}
-}

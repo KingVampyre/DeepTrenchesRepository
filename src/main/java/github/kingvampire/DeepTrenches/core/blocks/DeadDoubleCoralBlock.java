@@ -25,62 +25,65 @@ import net.minecraft.world.World;
 
 public class DeadDoubleCoralBlock extends ModDeadCoralPlantBlock {
 
-	public DeadDoubleCoralBlock(Properties properties) {
-		super(properties);
+    public DeadDoubleCoralBlock(Properties properties) {
+	super(properties);
 
-		this.setDefaultState(this.stateContainer.getBaseState().with(HALF, LOWER).with(WATERLOGGED, true));
-	}
+	this.setDefaultState(this.stateContainer.getBaseState().with(HALF, LOWER).with(WATERLOGGED, true));
+    }
 
-	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+    @Override
+    protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	super.fillStateContainer(builder);
 
-		builder.add(HALF);
-	}
+	builder.add(HALF);
+    }
 
-	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = context.getWorld().getBlockState(context.getPos().up());
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+	BlockState state = context.getWorld().getBlockState(context.getPos().up());
 
-		return state.isReplaceable(context) ? super.getStateForPlacement(context) : AIR.getDefaultState();
-	}
+	return state.isReplaceable(context) ? super.getStateForPlacement(context) : AIR.getDefaultState();
+    }
 
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		BlockState down = worldIn.getBlockState(pos.down());
-		int height = worldIn.getDimension().getHeight() - 1;
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	BlockState down = worldIn.getBlockState(pos.down());
+	int height = worldIn.getDimension().getHeight() - 1;
 
-		if (pos.getY() < height)
-			if (state.get(HALF) == LOWER)
-				return down.getBlock() != this;
-			else
-				return down.getBlock() == this;
+	if (pos.getY() < height)
+	    if (state.get(HALF) == LOWER)
+		return down.getBlock() != this && super.isValidPosition(state, worldIn, pos);
+	    else
+		return down.getBlock() == this;
 
-		return false;
-	}
+	return false;
+    }
 
-	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	    BlockPos currentPos, BlockPos facingPos) {
 
-		if (stateIn.get(WATERLOGGED))
-			worldIn.getPendingFluidTicks().scheduleTick(currentPos, WATER, WATER.getTickRate(worldIn));
+	if (!this.isValidPosition(stateIn, worldIn, currentPos))
+	    worldIn.destroyBlock(currentPos, true);
 
-		return stateIn;
-	}
+	if (stateIn.get(WATERLOGGED))
+	    worldIn.getPendingFluidTicks().scheduleTick(currentPos, WATER, WATER.getTickRate(worldIn));
 
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		BlockPos up = pos.up();
-		BlockState stateIn = worldIn.getBlockState(up);
+	return stateIn;
+    }
 
-		worldIn.setBlockState(up, state.with(HALF, UPPER).with(WATERLOGGED, stateIn.getBlock() == Blocks.WATER));
-	}
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	BlockPos up = pos.up();
+	BlockState stateIn = worldIn.getBlockState(up);
 
-	@Override
-	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-		BlockPos half = state.get(HALF) == LOWER ? pos.up() : pos.down();
+	worldIn.setBlockState(up, state.with(HALF, UPPER).with(WATERLOGGED, stateIn.getBlock() == Blocks.WATER));
+    }
 
-		worldIn.setBlockState(half, AIR.getDefaultState(), 2);
-		super.onBlockHarvested(worldIn, pos, state, player);
-	}
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+	BlockPos half = state.get(HALF) == LOWER ? pos.up() : pos.down();
+
+	worldIn.setBlockState(half, AIR.getDefaultState(), 2);
+	super.onBlockHarvested(worldIn, pos, state, player);
+    }
 
 }

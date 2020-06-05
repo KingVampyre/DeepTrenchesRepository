@@ -38,13 +38,11 @@ import github.kingvampire.DeepTrenches.core.blocks.SproomSpikeBlock;
 import github.kingvampire.DeepTrenches.core.blocks.StaspNestBlock;
 import github.kingvampire.DeepTrenches.core.enchantments.DrainingEnchantment;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
-import github.kingvampire.DeepTrenches.core.entity.BoatEntityDT;
-import github.kingvampire.DeepTrenches.core.entity.SignTileEntityDT;
 import github.kingvampire.DeepTrenches.core.entity.StaspNestTileEntity;
+import github.kingvampire.DeepTrenches.core.init.ModFoods;
 import github.kingvampire.DeepTrenches.core.items.AdaiggerItem;
-import github.kingvampire.DeepTrenches.core.items.BettaBucketItem;
 import github.kingvampire.DeepTrenches.core.items.BoatItemDT;
-import github.kingvampire.DeepTrenches.core.items.DeepLakeBettaBucketItem;
+import github.kingvampire.DeepTrenches.core.items.ModFishBucketItem;
 import github.kingvampire.DeepTrenches.core.potion.DrainingEffect;
 import github.kingvampire.DeepTrenches.core.potion.SleepyEffect;
 import net.minecraft.block.Block;
@@ -166,9 +164,9 @@ public class RegistryHandler {
 	Properties biolum = Properties.create(ROCK, GRAY).hardnessAndResistance(1.5F, 6F).lightValue(15);
 	Properties violet = Properties.from(COCOA).sound(PLANT);
 
-	mapToBlock.put("cyan_bioluminescent_coral", biolum);
-	mapToBlock.put("green_bioluminescent_coral", biolum);
-	mapToBlock.put("light_blue_bioluminescent_coral", biolum);
+	mapToBlock.put("cyan_bioluminescent_block", biolum);
+	mapToBlock.put("green_bioluminescent_block", biolum);
+	mapToBlock.put("light_blue_bioluminescent_block", biolum);
 	mapToBlock.put("giant_violet_pistil", violet);
 	mapToBlock.put("giant_violet_petal", violet);
 	mapToBlock.put("gyldelion_block", Properties.from(IRON_BLOCK));
@@ -210,10 +208,10 @@ public class RegistryHandler {
 		.setCustomClientFactory(AdaiggerEntity::new)
 		.build(MODID + ".adaigger");
 
-	EntityType<BoatEntityDT> boat = EntityType.Builder
-		.<BoatEntityDT>create(BoatEntityDT::new, MISC)
+	EntityType<ModBoatEntity> boat = EntityType.Builder
+		.<ModBoatEntity>create(ModBoatEntity::new, MISC)
 		.size(1.375F, 0.5625F)
-		.setCustomClientFactory(BoatEntityDT::new)
+		.setCustomClientFactory(ModBoatEntity::new)
 		.build(MODID + ".boat");
 
 	types.add(adaigger.setRegistryName(new ResourceLocation(MODID, "adaigger")));
@@ -277,19 +275,19 @@ public class RegistryHandler {
 	map.put("thundercloud_plum", new Item.Properties().group(GENERAL).food(APPLE));
 
 	map.put("aquean_sap", new Item.Properties().group(GENERAL));
-
 	map.put("gyldelion_dye", new Item.Properties().group(GENERAL));
 	map.put("gyldelion_ingot", new Item.Properties().group(GENERAL));
 	map.put("gyldelion_nugget", new Item.Properties().group(GENERAL));
 	map.put("gyldelion_stick", new Item.Properties().group(GENERAL));
 	map.put("bottle_of_aquean_sap", new Item.Properties().group(GENERAL));
-	
-	map.put("betta", new Item.Properties().group(GENERAL));
-	map.put("deep_lake_betta", new Item.Properties().group(GENERAL));
+
+	map.put("betta", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
+	map.put("deep_lake_betta", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
 
 	items.put("adaigger", new AdaiggerItem());
-	items.put("betta_bucket", new BettaBucketItem());
-	items.put("deep_lake_betta_bucket", new DeepLakeBettaBucketItem());
+
+	items.put("betta_bucket", new ModFishBucketItem(BETTA, new Item.Properties().maxStackSize(1).group(GENERAL)));
+	items.put("deep_lake_betta_bucket", new ModFishBucketItem(DEEP_LAKE_BETTA, new Item.Properties().maxStackSize(1).group(GENERAL)));
 
 	Item.Properties properties = new Item.Properties().maxStackSize(1).group(GENERAL);
 	
@@ -300,9 +298,9 @@ public class RegistryHandler {
 	for (WoodType woodType : WoodType.values())
 	    map.put(woodType + "_stick", new Item.Properties().group(GENERAL));
 
-	blocks.add(CYAN_BIOLUMINESCENT_CORAL);
-	blocks.add(GREEN_BIOLUMINESCENT_CORAL);
-	blocks.add(LIGHT_BLUE_BIOLUMINESCENT_CORAL);
+	blocks.add(CYAN_BIOLUMINESCENT_BLOCK);
+	blocks.add(GREEN_BIOLUMINESCENT_BLOCK);
+	blocks.add(LIGHT_BLUE_BIOLUMINESCENT_BLOCK);
 	blocks.add(STASP_NEST);
 
 	blocks.add(PINK_ROSE);
@@ -682,6 +680,7 @@ public class RegistryHandler {
 	blocks.add(STRIPPED_THUNDERCLOUD_PLUM_WOOD);
 
 	blocks.add(BLACKGREEN_TREE_CORAL_BLOCK);
+	blocks.add(BROCCOLI_CORAL_BLOCK);
 	blocks.add(BUBBLEGUM_CORAL_BLOCK);
 	blocks.add(CABBAGE_TREE_CORAL_BLOCK);
 	blocks.add(FLOWERTUBE_CORAL_BLOCK);
@@ -701,6 +700,7 @@ public class RegistryHandler {
 	blocks.add(TRUMPETEAR_CORAL_BLOCK);
 
 	blocks.add(DEAD_BLACKGREEN_TREE_CORAL_BLOCK);
+	blocks.add(DEAD_BROCCOLI_CORAL_BLOCK);
 	blocks.add(DEAD_BUBBLEGUM_CORAL_BLOCK);
 	blocks.add(DEAD_CABBAGE_TREE_CORAL_BLOCK);
 	blocks.add(DEAD_FLOWERTUBE_CORAL_BLOCK);
@@ -720,6 +720,7 @@ public class RegistryHandler {
 	blocks.add(DEAD_TRUMPETEAR_CORAL_BLOCK);
 
 	blocks.add(BLACKGREEN_TREE_CORAL);
+	blocks.add(BROCCOLI_CORAL);
 	blocks.add(BUBBLEGUM_CORAL);
 	blocks.add(CABBAGE_TREE_CORAL);
 	blocks.add(FLOWERTUBE_CORAL);
@@ -740,6 +741,7 @@ public class RegistryHandler {
 	blocks.add(TRUMPETEAR_CORAL);
 
 	blocks.add(DEAD_BLACKGREEN_TREE_CORAL);
+	blocks.add(DEAD_BROCCOLI_CORAL);
 	blocks.add(DEAD_BUBBLEGUM_CORAL);
 	blocks.add(DEAD_CABBAGE_TREE_CORAL);
 	blocks.add(DEAD_FLOWERTUBE_CORAL);
@@ -760,6 +762,7 @@ public class RegistryHandler {
 	blocks.add(DEAD_TRUMPETEAR_CORAL);
 
 	blocks.add(BLACKGREEN_TREE_CORAL_FAN);
+	blocks.add(BROCCOLI_CORAL_FAN);
 	blocks.add(BUBBLEGUM_CORAL_FAN);
 	blocks.add(CABBAGE_TREE_CORAL_FAN);
 	blocks.add(FLOWERTUBE_CORAL_FAN);
@@ -779,6 +782,7 @@ public class RegistryHandler {
 	blocks.add(TRUMPETEAR_CORAL_FAN);
 
 	blocks.add(DEAD_BLACKGREEN_TREE_CORAL_FAN);
+	blocks.add(DEAD_BROCCOLI_CORAL_FAN);
 	blocks.add(DEAD_BUBBLEGUM_CORAL_FAN);
 	blocks.add(DEAD_CABBAGE_TREE_CORAL_FAN);
 	blocks.add(DEAD_FLOWERTUBE_CORAL_FAN);
@@ -860,7 +864,7 @@ public class RegistryHandler {
     public static void registerTileEntities(Register<TileEntityType<?>> event) {
 	List<TileEntityType<?>> types = new ArrayList<>();
 
-	TileEntityType.Builder<SignTileEntityDT> sign = TileEntityType.Builder.create(SignTileEntityDT::new,
+	TileEntityType.Builder<ModSignTileEntity> sign = TileEntityType.Builder.create(ModSignTileEntity::new,
 		ALMOND_SIGN, ALMOND_WALL_SIGN, ANAMEATA_SIGN, ANAMEATA_WALL_SIGN, AQUEAN_SIGN, AQUEAN_WALL_SIGN,
 		BARSHROOKLE_SIGN, BARSHROOKLE_WALL_SIGN, BLACK_BIRCH_SIGN, BLACK_BIRCH_WALL_SIGN, CHERRY_SIGN,
 		CHERRY_WALL_SIGN, COOK_PINE_SIGN, COOK_PINE_WALL_SIGN, CROLOOD_SIGN, CROLOOD_WALL_SIGN,

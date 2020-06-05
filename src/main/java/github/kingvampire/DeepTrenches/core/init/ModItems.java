@@ -30,7 +30,6 @@ public class ModItems {
     public static final Item COOK_PINE_STICK = null;
     public static final Item CROLOOD_FRUIT = null;
     public static final Item CROLOOD_STICK = null;
-    public static final Item CYAN_BIOLUMINESCENCE = null;
     public static final Item CYAN_BIOLUMINESCENT_GOO = null;
     public static final Item DARK_CROLOOD_FRUIT = null;
     public static final Item DARK_CROLOOD_STICK = null;
@@ -47,7 +46,6 @@ public class ModItems {
     public static final Item GYLDELION_INGOT = null;
     public static final Item GYLDELION_NUGGET = null;
     public static final Item GYLDELION_STICK = null;
-    public static final Item LIGHT_BLUE_BIOLUMINESCENCE = null;
     public static final Item LIGHT_BLUE_BIOLUMINESCENT_GOO = null;
     public static final Item PELTOGYNE_BOAT = null;
     public static final Item PELTOGYNE_STICK = null;

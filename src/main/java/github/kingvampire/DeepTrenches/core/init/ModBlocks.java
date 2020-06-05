@@ -87,6 +87,9 @@ public class ModBlocks {
 	public static final Block BLACKGREEN_TREE_CORAL_BLOCK = null;
 	public static final Block BLACKGREEN_TREE_CORAL_FAN = null;
 	public static final Block BLUE_POPPY = null;
+	public static final Block BROCCOLI_CORAL = null;
+	public static final Block BROCCOLI_CORAL_BLOCK = null;
+	public static final Block BROCCOLI_CORAL_FAN = null;
 	public static final Block BUBBLEGUM_CORAL = null;
 	public static final Block BUBBLEGUM_CORAL_BLOCK = null;
 	public static final Block BUBBLEGUM_CORAL_FAN = null;
@@ -138,7 +141,7 @@ public class ModBlocks {
 	public static final Block CROLOOD_TRAPDOOR = null;
 	public static final Block CROLOOD_WALL_SIGN = null;
 	public static final Block CROLOOD_WOOD = null;
-	public static final Block CYAN_BIOLUMINESCENT_CORAL = null;
+	public static final Block CYAN_BIOLUMINESCENT_BLOCK = null;
 	public static final Block DARK_CROLOOD_BUTTON = null;
 	public static final Block DARK_CROLOOD_DOOR = null;
 	public static final Block DARK_CROLOOD_FENCE = null;
@@ -157,6 +160,9 @@ public class ModBlocks {
 	public static final Block DEAD_BLACKGREEN_TREE_CORAL = null;
 	public static final Block DEAD_BLACKGREEN_TREE_CORAL_BLOCK = null;
 	public static final Block DEAD_BLACKGREEN_TREE_CORAL_FAN = null;
+	public static final Block DEAD_BROCCOLI_CORAL = null;
+	public static final Block DEAD_BROCCOLI_CORAL_BLOCK = null;
+	public static final Block DEAD_BROCCOLI_CORAL_FAN = null;
 	public static final Block DEAD_BUBBLEGUM_CORAL = null;
 	public static final Block DEAD_BUBBLEGUM_CORAL_BLOCK = null;
 	public static final Block DEAD_BUBBLEGUM_CORAL_FAN = null;
@@ -283,13 +289,13 @@ public class ModBlocks {
 	public static final Block GLOWTONGUE_TUBE_CORAL = null;
 	public static final Block GLOWTONGUE_TUBE_CORAL_BLOCK = null;
 	public static final Block GLOWTONGUE_TUBE_CORAL_FAN = null;
-	public static final Block GREEN_BIOLUMINESCENT_CORAL = null;
+	public static final Block GREEN_BIOLUMINESCENT_BLOCK = null;
 	public static final Block GYLDELION_BLOCK = null;
 	public static final Block GYLDELION_FLOWER = null;
 	public static final Block IVORY_CORAL = null;
 	public static final Block IVORY_CORAL_BLOCK = null;
 	public static final Block IVORY_CORAL_FAN = null;
-	public static final Block LIGHT_BLUE_BIOLUMINESCENT_CORAL = null;
+	public static final Block LIGHT_BLUE_BIOLUMINESCENT_BLOCK = null;
 	public static final Block LIME_BRAIN_CORAL = null;
 	public static final Block LIME_BRAIN_CORAL_BLOCK = null;
 	public static final Block LIME_BRAIN_CORAL_FAN = null;
