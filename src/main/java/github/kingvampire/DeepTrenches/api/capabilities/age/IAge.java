@@ -1,6 +1,7 @@
 package github.kingvampire.DeepTrenches.api.capabilities.age;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.age.AgeProvider.AGE_CAPABILITY;
+import static net.minecraft.entity.SpawnReason.BREEDING;
 import static net.minecraft.particles.ParticleTypes.HAPPY_VILLAGER;
 
 import java.util.Random;
@@ -14,8 +15,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -43,11 +44,15 @@ public interface IAge {
 
 	if (this.getGrowingAge() == 0)
 	    this.setGrowingAge(this.getForcedAge());
-
     }
 
     @Nullable
-    CreatureEntity createChild(CreatureEntity creature);
+    default CreatureEntity createChild(CreatureEntity creature) {
+	BlockPos pos = creature.getPosition();
+	World world = creature.getEntityWorld();
+
+	return (CreatureEntity) creature.getType().spawn(world, null, null, pos, BREEDING, true, false);
+    }
 
     CreatureEntity getCreatureEntity();
 
@@ -94,18 +99,15 @@ public interface IAge {
 		this.setGrowingAge(++growingAge);
 	    else if (growingAge > 0)
 		this.setGrowingAge(--growingAge);
+
+	    this.sendPacket();
 	}
 
     }
 
-    /**
-     * Override CreatureEntity::notifyDataManagerChange
-     */
-    void notifyDataManagerChange(DataParameter<?> key);
-
-    void onChildSpawnFromEgg(PlayerEntity playerIn, CreatureEntity child);
-
-    void onGrowingAdult();
+    default void onGrowingAdult() {
+	this.getCreatureEntity().recalculateSize();
+    }
 
     /**
      * Override CreatureEntity::processInteract
@@ -117,7 +119,7 @@ public interface IAge {
 	ItemStack stack = player.getHeldItem(hand);
 	Item item = stack.getItem();
 
-	if (item instanceof SpawnEggItem) {
+	if (!creature.world.isRemote() && item instanceof SpawnEggItem) {
 	    SpawnEggItem eggItem = (SpawnEggItem) item;
 
 	    CompoundNBT compound = stack.getTag();
@@ -144,10 +146,10 @@ public interface IAge {
 			if (stack.hasDisplayName())
 			    child.setCustomName(stack.getDisplayName());
 
-			this.onChildSpawnFromEgg(player, child);
-
 			if (!player.abilities.isCreativeMode)
 			    stack.shrink(1);
+
+			this.sendPacket();
 		    }
 		}
 	    }
@@ -156,6 +158,14 @@ public interface IAge {
 	}
 
 	return false;
+    }
+
+    default void sendPacket() {
+	// TODO send packet
+	// CreatureEntity creature = this.getCreatureEntity();
+	// AgeCapabilityPacket packet = new AgeCapabilityPacket(creature, this);
+
+	// INSTANCE.send(TRACKING_ENTITY_AND_SELF.with(() -> creature), packet);
     }
 
     void setForcedAge(int forcedAge);

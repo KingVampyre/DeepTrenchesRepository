@@ -3,6 +3,7 @@ package github.kingvampire.DeepTrenches.api.entity.goals;
 import static github.kingvampire.DeepTrenches.api.capabilities.age.AgeProvider.AGE_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.breed.BreedProvider.BREED_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.tame.TameProvider.TAME_CAPABILITY;
+import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.MOVEMENT_SPEED_BOOST;
 import static net.minecraft.entity.ai.goal.Goal.Flag.LOOK;
 import static net.minecraft.entity.ai.goal.Goal.Flag.MOVE;
 import static net.minecraft.stats.Stats.ANIMALS_BRED;
@@ -15,7 +16,7 @@ import javax.annotation.Nullable;
 
 import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
 import github.kingvampire.DeepTrenches.api.capabilities.breed.IBreed;
-import github.kingvampire.DeepTrenches.core.util.ModEventFactory;
+import github.kingvampire.DeepTrenches.api.events.ModEventFactory;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.ai.goal.Goal;
@@ -30,15 +31,15 @@ public class BreedGoal extends Goal {
     protected final double distance;
     protected final IAge iage;
     protected final IBreed ibreed;
-    
+
     protected CreatureEntity mate;
     protected int runDelay;
     protected final double speed;
 
-    public BreedGoal(CreatureEntity creature, double distance, double speed) {
+    public BreedGoal(CreatureEntity creature, double distance) {
 	this.creature = creature;
 	this.distance = distance;
-	this.speed = speed;
+	this.speed = creature.getAttribute(MOVEMENT_SPEED_BOOST).getValue();
 
 	this.iage = creature.getCapability(AGE_CAPABILITY).orElseThrow(IllegalArgumentException::new);
 	this.ibreed = creature.getCapability(BREED_CAPABILITY).orElseThrow(IllegalArgumentException::new);
@@ -63,17 +64,12 @@ public class BreedGoal extends Goal {
 	AxisAlignedBB aabb = this.creature.getBoundingBox().grow(this.distance);
 	World world = this.creature.getEntityWorld();
 
-	EntityPredicate predicate = new EntityPredicate()
-		.setDistance(this.distance)
-		.allowInvulnerable()
-		.allowFriendlyFire()
-		.setLineOfSiteRequired();
+	EntityPredicate predicate = new EntityPredicate().setDistance(this.distance).allowInvulnerable()
+		.allowFriendlyFire().setLineOfSiteRequired();
 
-	world.getTargettableEntitiesWithinAABB(this.creature.getClass(), predicate, this.creature, aabb)
-		.stream()
+	world.getTargettableEntitiesWithinAABB(this.creature.getClass(), predicate, this.creature, aabb).stream()
 		.filter(creature -> this.ibreed.canMateWith(creature))
-		.sorted(Comparator.comparing(creature -> this.creature.getDistanceSq(creature)))
-		.findFirst()
+		.sorted(Comparator.comparing(creature -> this.creature.getDistanceSq(creature))).findFirst()
 		.ifPresent(creature -> this.mate = creature);
 
 	return this.mate != null;

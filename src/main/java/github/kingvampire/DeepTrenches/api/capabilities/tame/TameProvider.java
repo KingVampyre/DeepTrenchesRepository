@@ -1,6 +1,10 @@
 package github.kingvampire.DeepTrenches.api.capabilities.tame;
 
+import java.util.function.Predicate;
+
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -15,8 +19,17 @@ public class TameProvider implements ICapabilitySerializable<CompoundNBT> {
 
     private final LazyOptional<ITame> tame;
 
-    public TameProvider(CreatureEntity creature) {
-	this.tame = LazyOptional.of(() -> new Tame(creature));
+    public TameProvider(CreatureEntity creature, int tameChance, Item breedingItem) {
+	this.tame = LazyOptional.of(() -> new Tame(creature, tameChance, stack -> stack.getItem() == breedingItem));
+    }
+
+    public TameProvider(CreatureEntity creature, int tameChance, Predicate<ItemStack> predicate) {
+	this.tame = LazyOptional.of(() -> new Tame(creature, tameChance, predicate));
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+	TAME_CAPABILITY.readNBT(this.tame.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
     @Override
@@ -27,11 +40,6 @@ public class TameProvider implements ICapabilitySerializable<CompoundNBT> {
     @Override
     public CompoundNBT serializeNBT() {
 	return (CompoundNBT) TAME_CAPABILITY.writeNBT(this.tame.orElseThrow(IllegalArgumentException::new), null);
-    }
-
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-	TAME_CAPABILITY.readNBT(this.tame.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
 }

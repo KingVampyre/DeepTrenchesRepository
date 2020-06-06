@@ -606,4 +606,9 @@
 	"item.deep_trenches.thundercloud_plum_boat": "Thundercloud Plum Boat",
 	"item.deep_trenches.thundercloud_plum_stick": "Thundercloud Plum Stick",
 	"itemGroup.deep_trenches": "Deep Trenches"
+	"text.deep_trenches.entity.betta_splendidens.blue": "Blue Betta",
+	"text.deep_trenches.entity.betta_splendidens.colorful": "Colorful Betta",
+	"text.deep_trenches.entity.betta_splendidens.icarus": "Icarus",
+	"text.deep_trenches.entity.betta_splendidens.icarus_junior": "Icarus Jr",
+	"text.deep_trenches.entity.betta_splendidens.red": "Red Betta",
 }

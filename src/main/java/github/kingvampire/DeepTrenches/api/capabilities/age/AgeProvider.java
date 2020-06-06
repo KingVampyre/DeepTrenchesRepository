@@ -1,10 +1,7 @@
 package github.kingvampire.DeepTrenches.api.capabilities.age;
 
-import java.util.function.Function;
-
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -18,10 +15,8 @@ public class AgeProvider implements ICapabilitySerializable<CompoundNBT> {
 
     private final LazyOptional<IAge> age;
 
-    public AgeProvider(CreatureEntity creature, Function<CreatureEntity, CreatureEntity> createChild,
-	    DataParameter<Boolean> parameter) {
-
-	this.age = LazyOptional.of(() -> new Age(creature, createChild, parameter));
+    public AgeProvider(CreatureEntity creature) {
+	this.age = LazyOptional.of(() -> new Age(creature));
     }
 
     @Override

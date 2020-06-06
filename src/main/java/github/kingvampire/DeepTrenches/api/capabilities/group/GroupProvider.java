@@ -15,8 +15,8 @@ public class GroupProvider implements ICapabilitySerializable<CompoundNBT> {
 
     private final LazyOptional<IGroup> group;
 
-    public GroupProvider(CreatureEntity entity) {
-	this.group = LazyOptional.of(() -> new Group(entity));
+    public GroupProvider(CreatureEntity entity, int maxGroupSize) {
+	this.group = LazyOptional.of(() -> new Group(entity, maxGroupSize));
     }
 
     @Override

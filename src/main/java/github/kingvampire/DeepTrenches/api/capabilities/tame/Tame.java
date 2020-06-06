@@ -1,9 +1,11 @@
 package github.kingvampire.DeepTrenches.api.capabilities.tame;
 
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class Tame implements ITame {
@@ -13,13 +15,17 @@ public class Tame implements ITame {
     protected boolean isSitting;
     protected boolean isTamed;
     protected UUID ownerId;
+    protected Predicate<ItemStack> predicate;
+    protected int tameChance;
 
     public Tame() {
 	this.creature = null;
     }
 
-    public Tame(CreatureEntity creature) {
+    public Tame(CreatureEntity creature, int tameChance, Predicate<ItemStack> predicate) {
 	this.creature = creature;
+	this.predicate = predicate;
+	this.tameChance = tameChance;
     }
 
     @Override
@@ -65,6 +71,16 @@ public class Tame implements ITame {
     @Override
     public void setTamed(boolean isTamed) {
 	this.isTamed = isTamed;
+    }
+
+    @Override
+    public int getTameChance() {
+	return this.tameChance;
+    }
+
+    @Override
+    public boolean isTameItem(ItemStack stack) {
+	return this.predicate.test(stack);
     }
 
 }

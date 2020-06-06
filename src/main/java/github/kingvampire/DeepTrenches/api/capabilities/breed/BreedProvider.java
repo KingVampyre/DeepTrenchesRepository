@@ -3,6 +3,7 @@ package github.kingvampire.DeepTrenches.api.capabilities.breed;
 import java.util.function.Predicate;
 
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -18,8 +19,17 @@ public class BreedProvider implements ICapabilitySerializable<CompoundNBT> {
 
     private final LazyOptional<IBreed> breed;
 
+    public BreedProvider(CreatureEntity creature, Item breedingItem) {
+	this.breed = LazyOptional.of(() -> new Breed(creature, stack -> stack.getItem() == breedingItem));
+    }
+
     public BreedProvider(CreatureEntity creature, Predicate<ItemStack> predicate) {
 	this.breed = LazyOptional.of(() -> new Breed(creature, predicate));
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+	BREED_CAPABILITY.readNBT(this.breed.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
     @Override
@@ -30,11 +40,6 @@ public class BreedProvider implements ICapabilitySerializable<CompoundNBT> {
     @Override
     public CompoundNBT serializeNBT() {
 	return (CompoundNBT) BREED_CAPABILITY.writeNBT(this.breed.orElseThrow(IllegalArgumentException::new), null);
-    }
-
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-	BREED_CAPABILITY.readNBT(this.breed.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
 }

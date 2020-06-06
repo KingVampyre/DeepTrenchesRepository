@@ -12,17 +12,20 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class Group implements IGroup {
 
-    private CreatureEntity creature;
-    private Set<CreatureEntity> group;
-    private CreatureEntity groupLeader;
+    protected int maxGroupSize;
+    
+    protected CreatureEntity creature;
+    protected Set<CreatureEntity> group;
+    protected CreatureEntity groupLeader;
 
     public Group() {
 	this.group = Sets.newHashSet();
     }
 
-    public Group(CreatureEntity creature) {
+    public Group(CreatureEntity creature, int maxGroupSize) {
 	this.creature = creature;
 	this.group = Sets.newHashSet();
+	this.maxGroupSize = maxGroupSize;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class Group implements IGroup {
 	    if (this.canEnterGroup(group)) {
 		this.setGroupLeader(creature);
 
-		return group.getGroup().add(this.creature);
+		return group.getMembers().add(this.creature);
 	    }
 	}
 
@@ -53,7 +56,7 @@ public class Group implements IGroup {
     }
 
     @Override
-    public Set<CreatureEntity> getGroup() {
+    public Set<CreatureEntity> getMembers() {
 	return this.group;
     }
 
@@ -69,7 +72,7 @@ public class Group implements IGroup {
 
     @Override
     public int getMaxGroupSize() {
-	return 4;
+	return this.maxGroupSize;
     }
 
     @Override
@@ -108,7 +111,7 @@ public class Group implements IGroup {
 	    this.setGroupLeader(null);
 
 	    if (lazyOptional.isPresent())
-		return lazyOptional.orElseThrow(IllegalArgumentException::new).getGroup().remove(this.creature);
+		return lazyOptional.orElseThrow(IllegalArgumentException::new).getMembers().remove(this.creature);
 	}
 
 	return false;

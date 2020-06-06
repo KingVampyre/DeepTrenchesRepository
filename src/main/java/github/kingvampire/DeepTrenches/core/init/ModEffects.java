@@ -13,10 +13,11 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModEffects {
 
     public static final Effect DRAINING = null;
-    public static final Effect SLEEPY = null;
 
     @SuppressWarnings("deprecation")
     public static final Effect FLOWER_BEAUTY = Registry.register(EFFECTS, new ResourceLocation(MODID, "flower_beauty"),
 	    new FlowerBeautyEffect());
+
+    public static final Effect SLEEPY = null;
 
 }

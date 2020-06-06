@@ -2,6 +2,7 @@ package github.kingvampire.DeepTrenches.api.entity.goals;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.group.GroupProvider.GROUP_CAPABILITY;
 import static net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE;
+import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 
 import java.util.Comparator;
 import java.util.List;
@@ -24,12 +25,12 @@ public class FollowGroupLeaderGoal extends Goal {
     private int runDelay;
     private double speed;
 
-    public FollowGroupLeaderGoal(CreatureEntity creature, double speed) {
-	this.runDelay = this.getRunDelay(creature.getRNG());
+    public FollowGroupLeaderGoal(CreatureEntity creature) {
 	this.creature = creature;
-	this.speed = speed;
+	this.runDelay = this.getRunDelay(creature.getRNG());
 
 	this.igroup = creature.getCapability(GROUP_CAPABILITY).orElseThrow(IllegalArgumentException::new);
+	this.speed = creature.getAttribute(MOVEMENT_SPEED).getValue();
     }
 
     protected int getRunDelay(Random random) {
@@ -70,15 +71,13 @@ public class FollowGroupLeaderGoal extends Goal {
 		.filter(entity -> this.creature.getClass() == entity.getClass())
 		.map(this.creature.getClass()::cast)
 		.map(creature -> creature.getCapability(GROUP_CAPABILITY))
-		.filter(lazyOptional -> lazyOptional.isPresent())
-		.map(lazyOptional -> lazyOptional.orElseThrow(IllegalArgumentException::new))
+		.filter(group -> group.isPresent())
+		.map(group -> group.orElseThrow(IllegalArgumentException::new))
 		.collect(Collectors.toList());
 
-	List<IGroup> leaders = bettas
-		.stream()
-		.filter(group -> group.isGroupLeader())
-		.filter(group -> group.getGroupSize() < group.getMaxGroupSize())
-		.sorted(Comparator.comparing(group -> this.creature.getDistanceSq(group.getCreatureEntity())))
+	List<IGroup> leaders = bettas.stream().filter(igroup -> igroup.isGroupLeader())
+		.filter(igroup -> igroup.getGroupSize() < igroup.getMaxGroupSize())
+		.sorted(Comparator.comparing(igroup -> this.creature.getDistanceSq(igroup.getCreatureEntity())))
 		.collect(Collectors.toList());
 
 	if (!leaders.isEmpty()) {
@@ -93,11 +92,8 @@ public class FollowGroupLeaderGoal extends Goal {
 	    }
 	}
 
-	List<IGroup> list = bettas
-		.stream()
-		.filter(IGroup::isAlone)
-		.limit(this.igroup.getMaxGroupSize() - this.igroup.getGroupSize())
-		.collect(Collectors.toList());
+	List<IGroup> list = bettas.stream().filter(IGroup::isAlone)
+		.limit(this.igroup.getMaxGroupSize() - this.igroup.getGroupSize()).collect(Collectors.toList());
 
 	if (!list.isEmpty()) {
 	    this.igroup.setGroupLeader(this.creature);

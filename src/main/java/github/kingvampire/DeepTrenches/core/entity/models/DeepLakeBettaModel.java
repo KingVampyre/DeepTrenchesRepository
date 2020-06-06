@@ -8,6 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DeepLakeBettaModel<T extends Entity> extends EntityModel<T> {
+    
     public RendererModel Body;
     public RendererModel Lower_jaw;
     public RendererModel Head;

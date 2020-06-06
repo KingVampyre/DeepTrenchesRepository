@@ -49,9 +49,9 @@ public class GroupStorage implements IStorage<IGroup> {
 	CompoundNBT compound = new CompoundNBT();
 	ListNBT listNBT = new ListNBT();
 
-	List<CreatureEntity> entities = instance.getGroup().stream().collect(Collectors.toList());
+	List<CreatureEntity> entities = instance.getMembers().stream().collect(Collectors.toList());
 
-	for (int i = 0; i < instance.getGroup().size(); i++) {
+	for (int i = 0; i < instance.getMembers().size(); i++) {
 	    CompoundNBT compoundNBT = new CompoundNBT();
 	    CreatureEntity creature = entities.get(i);
 

@@ -20,7 +20,7 @@ public interface IGroup {
 
     CreatureEntity getCreatureEntity();
 
-    Set<CreatureEntity> getGroup();
+    Set<CreatureEntity> getMembers();
 
     CreatureEntity getGroupLeader();
 
@@ -44,7 +44,7 @@ public interface IGroup {
     default void onDeath(DamageSource cause) {
 	
 	if (this.isGroupLeader()) {
-	    this.getGroup().stream()
+	    this.getMembers().stream()
 	    	.map(creature -> creature.getCapability(GROUP_CAPABILITY))
 	    	.filter(LazyOptional::isPresent)
 	    	.map(lazyOptional -> lazyOptional.orElse(null))

@@ -1,5 +1,6 @@
 package github.kingvampire.DeepTrenches.core.entity.goals.stasp;
 
+import static github.kingvampire.DeepTrenches.core.init.ModEffects.FLOWER_BEAUTY;
 import static net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE;
 import static net.minecraft.util.math.BlockPos.ZERO;
 
@@ -35,6 +36,9 @@ public class StaspAngerGoal extends AngerGoal {
 		continue;
 
 	    if (home != ZERO && home.equals(stasp.getHomePosition()))
+		continue;
+
+	    if (target.isPotionActive(FLOWER_BEAUTY))
 		continue;
 
 	    if (target instanceof PlayerEntity) {

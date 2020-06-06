@@ -1,6 +1,8 @@
 package github.kingvampire.DeepTrenches.api.entity.goals;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.tame.TameProvider.TAME_CAPABILITY;
+import static net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE;
+import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 import static net.minecraft.entity.ai.goal.Goal.Flag.LOOK;
 import static net.minecraft.entity.ai.goal.Goal.Flag.MOVE;
 import static net.minecraft.pathfinding.PathNodeType.WATER;
@@ -27,17 +29,16 @@ public class FollowOwnerGoal extends Goal {
     protected final double speed;
 
     protected ITame itame;
-    protected final float teleportDist;
+    protected final double teleportDist;
     protected int timeToRecalcPath;
 
-    public FollowOwnerGoal(CreatureEntity creature, double speed, float minDist, float maxDist,
-	    float teleportDist) {
-
+    public FollowOwnerGoal(CreatureEntity creature, float minDist, float maxDist) {
 	this.creature = creature;
 	this.maxDist = maxDist;
 	this.minDist = minDist;
-	this.speed = speed;
-	this.teleportDist = teleportDist;
+
+	this.speed = creature.getAttribute(MOVEMENT_SPEED).getValue();
+	this.teleportDist = creature.getAttribute(FOLLOW_RANGE).getValue();
 
 	this.itame = creature.getCapability(TAME_CAPABILITY).orElseThrow(IllegalArgumentException::new);
 	this.navigator = creature.getNavigator();
@@ -81,7 +82,7 @@ public class FollowOwnerGoal extends Goal {
 	    return false;
 	else if (this.itame.isSitting())
 	    return false;
-	else if (this.creature.getDistanceSq(player) < this.maxDist * this.maxDist)
+	else if (this.creature.getDistanceSq(player) < this.minDist * this.minDist)
 	    return false;
 
 	return true;
@@ -89,7 +90,6 @@ public class FollowOwnerGoal extends Goal {
     }
 
     protected boolean shouldTeleport(PlayerEntity owner) {
-	this.navigator.tryMoveToEntityLiving(owner, this.speed);
 
 	if (!this.navigator.tryMoveToEntityLiving(owner, this.speed)) {
 	    double distance = this.creature.getDistanceSq(owner);

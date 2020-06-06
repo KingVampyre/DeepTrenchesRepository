@@ -1,6 +1,7 @@
 package github.kingvampire.DeepTrenches.core.entity;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.anger.AngerProvider.ANGER_CAPABILITY;
+import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.MOVEMENT_SPEED_BOOST;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.STASP;
 import static net.minecraft.entity.SharedMonsterAttributes.ARMOR;
 import static net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE;
@@ -139,6 +140,7 @@ public class StaspEntity extends CreatureEntity {
 
 	this.getAttributes().registerAttribute(ATTACK_DAMAGE).setBaseValue(3F);
 	this.getAttributes().registerAttribute(FLYING_SPEED).setBaseValue(0.4F);
+	this.getAttributes().registerAttribute(MOVEMENT_SPEED_BOOST).setBaseValue(0.2F);
     }
 
     @Override
@@ -157,7 +159,7 @@ public class StaspEntity extends CreatureEntity {
 	FindLogGoal findLogGoal = new FindLogGoal(this, 0.1F, 16, 32);
 	FindMosoilGoal findMosoilGoal = new FindMosoilGoal(this, 0.1F, 16, 32);
 
-	this.goalSelector.addGoal(0, new AngryAttackGoal(this, 0.2F, false));
+	this.goalSelector.addGoal(0, new AngryAttackGoal(this, false));
 	this.goalSelector.addGoal(1, new ChargeAttackGoal(this, 0.3F));
 	this.goalSelector.addGoal(2, new EnterNestGoal(this));
 	this.goalSelector.addGoal(3, findLogGoal);

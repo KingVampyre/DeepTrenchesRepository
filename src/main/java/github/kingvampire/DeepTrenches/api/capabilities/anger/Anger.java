@@ -1,5 +1,7 @@
 package github.kingvampire.DeepTrenches.api.capabilities.anger;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.LivingEntity;
 
 public class Anger implements IAnger {
@@ -37,6 +39,7 @@ public class Anger implements IAnger {
 
 	    this.setAnger(--anger);
 	}
+
     }
 
     @Override
@@ -45,8 +48,10 @@ public class Anger implements IAnger {
     }
 
     @Override
-    public void setAnger(LivingEntity target) {
-	this.setAnger(this.minTicks + target.getRNG().nextInt(this.bonusTicks));
+    public void setAnger(@Nullable LivingEntity target) {
+
+	if (target != null)
+	    this.setAnger(this.minTicks + target.getRNG().nextInt(this.bonusTicks));
     }
 
 }
