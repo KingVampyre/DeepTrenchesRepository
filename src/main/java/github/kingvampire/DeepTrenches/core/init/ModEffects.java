@@ -19,5 +19,6 @@ public class ModEffects {
 	    new FlowerBeautyEffect());
 
     public static final Effect SLEEPY = null;
+    public static final Effect SOFTBONES = null;
 
 }

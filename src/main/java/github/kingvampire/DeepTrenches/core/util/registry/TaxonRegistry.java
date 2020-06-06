@@ -13,6 +13,8 @@ import github.kingvampire.DeepTrenches.api.taxonomy.SpeciesTaxon;
 import github.kingvampire.DeepTrenches.api.taxonomy.Taxon;
 import github.kingvampire.DeepTrenches.core.taxonomy.genus.BettaGenus;
 import github.kingvampire.DeepTrenches.core.taxonomy.genus.BigeyeLoosejawsGenus;
+import github.kingvampire.DeepTrenches.core.taxonomy.genus.MalacosteusGenus;
+import github.kingvampire.DeepTrenches.core.taxonomy.genus.SilverHatchetfishGenus;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +29,16 @@ public class TaxonRegistry {
 	IForgeRegistry<Taxon> registry = event.getRegistry();
 
 	OrderTaxon stomiiformes = new OrderTaxon("stomiiformes");
+
+	// Giant Hatchetfish, Loosejaws, and Smalltooth Dragonfish
+	FamilyTaxon stomiidae = new FamilyTaxon("stomiidae");
+	FamilyTaxon sternoptychidae = new FamilyTaxon("sternoptychidae", "hatchetfishes");
+
+	GenusTaxon malacosteus = new MalacosteusGenus();
+	GenusTaxon argyropelecus = new SilverHatchetfishGenus();
+	GenusTaxon pachystomias = new BigeyeLoosejawsGenus();
+
+	stomiiformes.addFamily(sternoptychidae.addGenus(argyropelecus), stomiidae.addGenus(malacosteus, pachystomias));
 
 	// Betta and Deep Lake Betta
 	OrderTaxon perciformes = new OrderTaxon("perciformes");

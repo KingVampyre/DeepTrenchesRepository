@@ -5,8 +5,14 @@ import static github.kingvampire.DeepTrenches.api.enums.WoodType.GHOSHROOM;
 import static github.kingvampire.DeepTrenches.core.init.ItemGroups.GENERAL;
 import static github.kingvampire.DeepTrenches.core.init.ModBlocks.*;
 import static github.kingvampire.DeepTrenches.core.init.ModEffects.FLOWER_BEAUTY;
+import static github.kingvampire.DeepTrenches.core.init.ModEffects.SOFTBONES;
+import static github.kingvampire.DeepTrenches.core.init.ModEntities.BARBELED_LOOSEJAW;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.BETTA;
+import static github.kingvampire.DeepTrenches.core.init.ModEntities.BLACK_LOOSEJAW;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.DEEP_LAKE_BETTA;
+import static github.kingvampire.DeepTrenches.core.init.ModEntities.GIANT_HATCHETFISH;
+import static github.kingvampire.DeepTrenches.core.init.ModEntities.LIGHT_LOOSEJAW;
+import static github.kingvampire.DeepTrenches.core.init.ModEntities.SMALLTOOTH_DRAGONFISH;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.STASP;
 import static github.kingvampire.DeepTrenches.core.util.Constants.MODID;
 import static net.minecraft.block.Blocks.COCOA;
@@ -32,6 +38,8 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
+import github.kingvampire.DeepTrenches.api.entity.ModBoatEntity;
+import github.kingvampire.DeepTrenches.api.entity.ModSignTileEntity;
 import github.kingvampire.DeepTrenches.api.enums.CoralType;
 import github.kingvampire.DeepTrenches.api.enums.WoodType;
 import github.kingvampire.DeepTrenches.core.blocks.SproomSpikeBlock;
@@ -45,6 +53,7 @@ import github.kingvampire.DeepTrenches.core.items.BoatItemDT;
 import github.kingvampire.DeepTrenches.core.items.ModFishBucketItem;
 import github.kingvampire.DeepTrenches.core.potion.DrainingEffect;
 import github.kingvampire.DeepTrenches.core.potion.SleepyEffect;
+import github.kingvampire.DeepTrenches.core.potion.SoftbonesEffect;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.Properties;
 import net.minecraft.block.FlowerBlock;
@@ -56,6 +65,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.SignItem;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent.Register;
@@ -241,10 +252,30 @@ public class RegistryHandler {
 	Map<String, Effect> effects = Maps.newHashMap();
 
 	effects.put("draining", new DrainingEffect());
+	effects.put("softbones", new SoftbonesEffect());
 	effects.put("sleepy", new SleepyEffect());
 
 	for (Entry<String, Effect> entry : effects.entrySet()) {
 	    Effect effect = entry.getValue();
+	    String path = entry.getKey();
+
+	    effect.setRegistryName(new ResourceLocation(MODID, path));
+
+	    event.getRegistry().register(effect);
+	}
+    }
+
+    @SubscribeEvent
+    public static void registerPotion(Register<Potion> event) {
+	Map<String, Potion> effects = Maps.newHashMap();
+
+	effects.put("long_softbones", new Potion("long_softbones", new EffectInstance(SOFTBONES, 14400)));
+	effects.put("long_strong_softbones", new Potion("long_strong_softbones", new EffectInstance(SOFTBONES, 9600, 1)));
+	effects.put("softbones", new Potion("softbones", new EffectInstance(SOFTBONES, 3600)));
+	effects.put("strong_softbones", new Potion("strong_softbones", new EffectInstance(SOFTBONES, 2400, 1)));
+
+	for (Entry<String, Potion> entry : effects.entrySet()) {
+	    Potion effect = entry.getValue();
 	    String path = entry.getKey();
 
 	    effect.setRegistryName(new ResourceLocation(MODID, path));
@@ -281,20 +312,40 @@ public class RegistryHandler {
 	map.put("gyldelion_stick", new Item.Properties().group(GENERAL));
 	map.put("bottle_of_aquean_sap", new Item.Properties().group(GENERAL));
 
+	map.put("barbeled_loosejaw", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
 	map.put("betta", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
+	map.put("black_loosejaw", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
 	map.put("deep_lake_betta", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
+	map.put("cooked_giant_hatchetfish",
+		new Item.Properties().food(ModFoods.COOKED_GIANT_HATCHETFISH).group(GENERAL));
+	map.put("giant_hatchetfish", new Item.Properties().food(ModFoods.GIANT_HATCHETFISH).group(GENERAL));
+	map.put("light_loosejaw", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
+	map.put("smalltooth_dragonfish", new Item.Properties().food(ModFoods.FISH).group(GENERAL));
+
+	map.put("loosejaw_tooth", new Item.Properties().group(GENERAL));
 
 	items.put("adaigger", new AdaiggerItem());
 
+	items.put("barbeled_loosejaw_bucket", new ModFishBucketItem(BARBELED_LOOSEJAW, new Item.Properties().maxStackSize(1).group(GENERAL)));
 	items.put("betta_bucket", new ModFishBucketItem(BETTA, new Item.Properties().maxStackSize(1).group(GENERAL)));
+	items.put("black_loosejaw_bucket", new ModFishBucketItem(BLACK_LOOSEJAW, new Item.Properties().maxStackSize(1).group(GENERAL)));
 	items.put("deep_lake_betta_bucket", new ModFishBucketItem(DEEP_LAKE_BETTA, new Item.Properties().maxStackSize(1).group(GENERAL)));
+	items.put("giant_hatchetfish_bucket", new ModFishBucketItem(GIANT_HATCHETFISH, new Item.Properties().maxStackSize(1).group(GENERAL)));
+	items.put("light_loosejaw_bucket", new ModFishBucketItem(LIGHT_LOOSEJAW, new Item.Properties().maxStackSize(1).group(GENERAL)));
+	items.put("smalltooth_dragonfish_bucket", new ModFishBucketItem(SMALLTOOTH_DRAGONFISH, new Item.Properties().maxStackSize(1).group(GENERAL)));
 
 	Item.Properties properties = new Item.Properties().maxStackSize(1).group(GENERAL);
-	
+
+	items.put("barbeled_loosejaw_spawn_egg", new SpawnEggItem(BARBELED_LOOSEJAW, 921113, 15859744, properties));
 	items.put("betta_spawn_egg", new SpawnEggItem(BETTA, 7347502, 9183521, properties));
+	items.put("black_loosejaw_spawn_egg", new SpawnEggItem(BLACK_LOOSEJAW, 2102566, 11010053, properties));
 	items.put("deep_lake_betta_spawn_egg", new SpawnEggItem(DEEP_LAKE_BETTA, 1189390, 5013319, properties));
+	items.put("giant_hatchetfish_spawn_egg", new SpawnEggItem(GIANT_HATCHETFISH, 9870757, 12311039, properties));
+	items.put("light_loosejaw_spawn_egg", new SpawnEggItem(LIGHT_LOOSEJAW, 1643048, 4836351, properties));
 	items.put("stasp_spawn_egg", new SpawnEggItem(STASP, 2695792, 5124510, properties));
-	
+	items.put("smalltooth_dragonfish_spawn_egg",
+		new SpawnEggItem(SMALLTOOTH_DRAGONFISH, 1250598, 16728832, properties));
+
 	for (WoodType woodType : WoodType.values())
 	    map.put(woodType + "_stick", new Item.Properties().group(GENERAL));
 
