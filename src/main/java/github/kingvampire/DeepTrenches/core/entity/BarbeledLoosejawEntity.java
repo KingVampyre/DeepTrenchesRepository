@@ -22,6 +22,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,8 +37,10 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
     public static final IAttribute SUBORBITAL_MAX_LIT = new RangedAttribute(null, "suborbital.maxLit", 1, 1, 200);
     public static final IAttribute SUBORBITAL_MIN_LIT = new RangedAttribute(null, "suborbital.minLit", 1, 1, 100);
 
-    public static final AttributeModifier NEG_SUBORBITAL_BOOST = new AttributeModifier("barbeledLoosejaw.negSuborbitalBoost", 0.75, MULTIPLY_BASE);
-    public static final AttributeModifier SUBORBITAL_BOOST = new AttributeModifier("barbeledLoosejaw.suborbitalBoost", 0.25, MULTIPLY_BASE);
+    public static final AttributeModifier NEG_SUBORBITAL_BOOST = new AttributeModifier(
+	    "barbeledLoosejaw.negSuborbitalBoost", 0.75, MULTIPLY_BASE);
+    public static final AttributeModifier SUBORBITAL_BOOST = new AttributeModifier("barbeledLoosejaw.suborbitalBoost",
+	    0.25, MULTIPLY_BASE);
 
     private int suborbitalDelay;
     private int suborbitalLit;
@@ -87,8 +90,18 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
 		if (this.suborbitalDelay == 0) {
 		    this.suborbitalLit = minLit + this.rand.nextInt(maxLit - minLit + 1);
 
-		    this.getAttribute(FOLLOW_RANGE).applyModifier(this.getSuborbitalBoost());
-		    this.getAttribute(PREY_DETECTION).applyModifier(this.getNegativeSuborbitalBoost());
+		    IAttributeInstance followRange = this.getAttribute(FOLLOW_RANGE);
+		    IAttributeInstance preyDetection = this.getAttribute(PREY_DETECTION);
+
+		    AttributeModifier suborbitalBoost = this.getSuborbitalBoost();
+		    AttributeModifier negSuborbitalBoost = this.getNegativeSuborbitalBoost();
+
+		    if (!followRange.hasModifier(suborbitalBoost) && !preyDetection.hasModifier(negSuborbitalBoost)) {
+
+			followRange.applyModifier(suborbitalBoost);
+			preyDetection.applyModifier(negSuborbitalBoost);
+		    }
+
 		}
 
 	    } else if (this.suborbitalLit > 0) {
@@ -97,8 +110,18 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
 		if (this.suborbitalLit == 0) {
 		    this.suborbitalDelay = (int) this.getAttribute(SUBORBITAL_DELAY).getBaseValue();
 
-		    this.getAttribute(FOLLOW_RANGE).removeModifier(this.getSuborbitalBoost());
-		    this.getAttribute(PREY_DETECTION).removeModifier(this.getNegativeSuborbitalBoost());
+		    IAttributeInstance followRange = this.getAttribute(FOLLOW_RANGE);
+		    IAttributeInstance preyDetection = this.getAttribute(PREY_DETECTION);
+
+		    AttributeModifier suborbitalBoost = this.getSuborbitalBoost();
+		    AttributeModifier negSuborbitalBoost = this.getNegativeSuborbitalBoost();
+
+		    if (followRange.hasModifier(suborbitalBoost) && preyDetection.hasModifier(negSuborbitalBoost)) {
+
+			followRange.removeModifier(suborbitalBoost);
+			preyDetection.removeModifier(negSuborbitalBoost);
+		    }
+
 		}
 
 	    }
