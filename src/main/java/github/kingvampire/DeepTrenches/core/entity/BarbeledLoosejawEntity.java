@@ -154,7 +154,6 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
 	this.getAttribute(MIN_LURING).setBaseValue(9); // 3
 	this.getAttribute(PREY_DETECTION).setBaseValue(1.25F); // 2
 
-//	this.getAttributes().registerAttribute(SUBORBITAL_BOOST).setBaseValue(0.25);
 	this.getAttributes().registerAttribute(SUBORBITAL_DELAY).setBaseValue(230);
 	this.getAttributes().registerAttribute(SUBORBITAL_MAX_LIT).setBaseValue(140);
 	this.getAttributes().registerAttribute(SUBORBITAL_MIN_LIT).setBaseValue(40);

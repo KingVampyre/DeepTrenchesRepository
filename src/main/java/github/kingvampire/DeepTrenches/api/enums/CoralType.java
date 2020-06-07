@@ -84,7 +84,7 @@ public enum CoralType implements IStringSerializable {
     }
 
     public Block deadTentacles() {
-	Block tentacles = new Block(Properties.from(DEAD_TUBE_CORAL).lightValue(this.light));
+	Block tentacles = new ModDeadCoralPlantBlock(Properties.from(DEAD_TUBE_CORAL).lightValue(this.light));
 
 	return tentacles.setRegistryName(new ResourceLocation(MODID, "dead_" + this + "_tentacles"));
     }

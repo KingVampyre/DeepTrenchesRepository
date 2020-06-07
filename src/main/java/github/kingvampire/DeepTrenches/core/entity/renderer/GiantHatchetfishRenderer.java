@@ -1,5 +1,6 @@
 package github.kingvampire.DeepTrenches.core.entity.renderer;
 
+import static com.mojang.blaze3d.platform.GlStateManager.Profile.TRANSPARENT_MODEL;
 import static github.kingvampire.DeepTrenches.api.capabilities.lit.LitProvider.LIT_CAPABILITY;
 import static github.kingvampire.DeepTrenches.core.util.Constants.MODID;
 
@@ -10,6 +11,7 @@ import github.kingvampire.DeepTrenches.api.entity.renderer.TaxonomyRenderer;
 import github.kingvampire.DeepTrenches.core.entity.GiantHatchetfishEntity;
 import github.kingvampire.DeepTrenches.core.entity.layers.TaxonomyLitLayer;
 import github.kingvampire.DeepTrenches.core.entity.models.GiantHatchetfishModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.LazyOptional;
@@ -47,9 +49,26 @@ public class GiantHatchetfishRenderer
     protected void renderModel(GiantHatchetfishEntity living, float limbSwing, float limbSwingAmount, float ageInTicks,
 	    float netHeadYaw, float headPitch, float scaleFactor) {
 
-	GlStateManager.enableBlend();
-	super.renderModel(living, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-	GlStateManager.disableBlend();
+	boolean flag = this.isVisible(living);
+	boolean flag1 = !flag && !living.isInvisibleToPlayer(Minecraft.getInstance().player);
+
+	if (flag || flag1) {
+
+	    if (!this.bindEntityTexture(living))
+		return;
+
+	    if (flag1)
+		GlStateManager.setProfile(TRANSPARENT_MODEL);
+
+	    GlStateManager.enableBlend();
+	    this.entityModel.render(living, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+	    GlStateManager.disableBlend();
+
+	    if (flag1)
+		GlStateManager.unsetProfile(TRANSPARENT_MODEL);
+
+	}
+
     }
 
 }

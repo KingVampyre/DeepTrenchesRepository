@@ -105,10 +105,11 @@ public class ModFishBucketItem extends FishBucketItem {
 			    PacketTarget target = TRACKING_ENTITY_AND_SELF.with(() -> entity);
 
 			    itax.setTaxonomyInstance(rank);
-			    entity.setFromBucket(true);
 
 			    INSTANCE.send(target, new TaxonomyCapabilityPacket(entity, rank));
 			}
+
+			entity.setFromBucket(true);
 		    }
 		}
 	    }
