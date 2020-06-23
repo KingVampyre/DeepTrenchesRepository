@@ -11,24 +11,24 @@ import net.minecraft.world.World;
 
 public class FlowerBeautyEffect extends Effect {
 
-	private static final String UUID = "91AEAA56-376B-4498-935B-2F7F68070635";
+    private static final String UUID = "91AEAA56-376B-4498-935B-2F7F68070635";
 
-	public FlowerBeautyEffect() {
-		super(NEUTRAL, 12001933);
+    public FlowerBeautyEffect() {
+	super(NEUTRAL, 12001933);
 
-		this.addAttributesModifier(MOVEMENT_SPEED, UUID, 0.2, MULTIPLY_TOTAL);
+	this.addAttributesModifier(MOVEMENT_SPEED, UUID, 0.2, MULTIPLY_TOTAL);
+    }
+
+    @Override
+    public void performEffect(LivingEntity entityLiving, int amplifier) {
+	World world = entityLiving.getEntityWorld();
+
+	if (entityLiving instanceof PlayerEntity) {
+	    PlayerEntity player = (PlayerEntity) entityLiving;
+
+	    if (!world.isRemote())
+		player.getFoodStats().addStats(amplifier + 1, 1);
 	}
-
-	@Override
-	public void performEffect(LivingEntity entityLiving, int amplifier) {
-		World world = entityLiving.getEntityWorld();
-
-		if (entityLiving instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) entityLiving;
-
-			if (!world.isRemote())
-				player.getFoodStats().addStats(amplifier + 1, 1);
-		}
-	}
+    }
 
 }

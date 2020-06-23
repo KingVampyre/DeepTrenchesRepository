@@ -3,7 +3,7 @@ package github.kingvampire.DeepTrenches.api.entity.goals;
 import static github.kingvampire.DeepTrenches.api.capabilities.age.AgeProvider.AGE_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.breed.BreedProvider.BREED_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.tame.TameProvider.TAME_CAPABILITY;
-import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.MOVEMENT_SPEED_BOOST;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.MOVEMENT_SPEED_BOOST;
 import static net.minecraft.entity.ai.goal.Goal.Flag.LOOK;
 import static net.minecraft.entity.ai.goal.Goal.Flag.MOVE;
 import static net.minecraft.stats.Stats.ANIMALS_BRED;
@@ -27,14 +27,14 @@ import net.minecraft.world.World;
 
 public class BreedGoal extends Goal {
 
-    protected final CreatureEntity creature;
-    protected final double distance;
     protected final IAge iage;
     protected final IBreed ibreed;
+    protected final CreatureEntity creature;
+    protected final double distance;
+    protected final double speed;
 
     protected CreatureEntity mate;
     protected int runDelay;
-    protected final double speed;
 
     public BreedGoal(CreatureEntity creature, double distance) {
 	this.creature = creature;
@@ -64,12 +64,17 @@ public class BreedGoal extends Goal {
 	AxisAlignedBB aabb = this.creature.getBoundingBox().grow(this.distance);
 	World world = this.creature.getEntityWorld();
 
-	EntityPredicate predicate = new EntityPredicate().setDistance(this.distance).allowInvulnerable()
-		.allowFriendlyFire().setLineOfSiteRequired();
+	EntityPredicate predicate = new EntityPredicate()
+		.setDistance(this.distance)
+		.allowInvulnerable()
+		.allowFriendlyFire()
+		.setLineOfSiteRequired();
 
-	world.getTargettableEntitiesWithinAABB(this.creature.getClass(), predicate, this.creature, aabb).stream()
+	world.getTargettableEntitiesWithinAABB(this.creature.getClass(), predicate, this.creature, aabb)
+		.stream()
 		.filter(creature -> this.ibreed.canMateWith(creature))
-		.sorted(Comparator.comparing(creature -> this.creature.getDistanceSq(creature))).findFirst()
+		.sorted(Comparator.comparing(creature -> this.creature.getDistanceSq(creature)))
+		.findFirst()
 		.ifPresent(creature -> this.mate = creature);
 
 	return this.mate != null;

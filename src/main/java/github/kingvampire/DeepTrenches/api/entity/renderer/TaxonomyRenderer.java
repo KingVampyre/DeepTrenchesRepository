@@ -23,23 +23,18 @@ public class TaxonomyRenderer<T extends MobEntity, M extends EntityModel<T>> ext
 	LazyOptional<ITaxonomy> taxonomy = entity.getCapability(TAXONOMY_CAPABILITY);
 
 	if (taxonomy.isPresent()) {
+	    ResourceLocation id = entity.getType().getRegistryName();
 	    ITaxonomy itaxonomy = taxonomy.orElseThrow(IllegalArgumentException::new);
 
-	    String family = itaxonomy.getFamily().getVulgarName();
-	    String genus = itaxonomy.getGenus().getVulgarName();
-	    String order = itaxonomy.getOrder().getVulgarName();
-	    String species = itaxonomy.getSpecies().getVulgarName();
-
-	    String rank = String.format("textures/entity/%1$s/%2$s/%3$s/%4$s", order, family, genus, species);
 	    SubspeciesTaxon subspecies = itaxonomy.getSubspecies();
 
 	    if (subspecies != null) {
 		String subspicies = subspecies.getVulgarName();
 
-		return new ResourceLocation(MODID, rank + "/" + subspicies);
+		return new ResourceLocation(MODID, "textures/entity/" + id.getPath() + "/" + subspicies);
 	    }
 
-	    return new ResourceLocation(MODID, rank);
+	    return new ResourceLocation(MODID, "textures/entity/" + id.getPath());
 	}
 
 	return null;

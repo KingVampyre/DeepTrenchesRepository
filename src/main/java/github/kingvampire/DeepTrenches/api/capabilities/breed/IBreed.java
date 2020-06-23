@@ -1,18 +1,24 @@
 package github.kingvampire.DeepTrenches.api.capabilities.breed;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.breed.BreedProvider.BREED_CAPABILITY;
+import static net.minecraft.particles.ParticleTypes.HEART;
+import static net.minecraftforge.fml.network.PacketDistributor.TRACKING_ENTITY_AND_SELF;
 
 import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import github.kingvampire.DeepTrenches.api.capabilities.IPacketSender;
 import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
+import github.kingvampire.DeepTrenches.core.util.NetworkHandler;
+import github.kingvampire.DeepTrenches.core.util.packets.CapabilityPacket;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -20,21 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
-public interface IBreed {
-
-    /**
-     * Override CreatureEntity::attackEntityFrom
-     */
-    default boolean shouldAttackEntityFrom(DamageSource source, float amount) {
-	CreatureEntity creature = this.getCreatureEntity();
-
-	if (creature.isInvulnerableTo(source))
-	    return false;
-
-	this.resetInLove();
-
-	return true;
-    }
+public interface IBreed extends IPacketSender {
 
     default boolean canBreed() {
 	return this.getInLove() <= 0;
@@ -128,10 +120,10 @@ public interface IBreed {
 	double zSpeed = rand.nextGaussian() * 0.02F;
 
 	double x = creature.posX + (double) (rand.nextFloat() * width * 2F) - width;
-	double y = creature.posY + 0.5D + (double) (rand.nextFloat() * height);
+	double y = creature.posY + 0.5 + (double) (rand.nextFloat() * height);
 	double z = creature.posZ + (double) (rand.nextFloat() * width * 2F) - width;
 
-	world.addParticle(ParticleTypes.HEART, x, y, z, xSpeed, ySpeed, zSpeed);
+	world.addParticle(HEART, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 
     /**
@@ -170,6 +162,14 @@ public interface IBreed {
 	this.setInLove(0);
     }
 
+    @Override
+    default void sendPacket(Entity entity) {
+	CompoundNBT compound = (CompoundNBT) BREED_CAPABILITY.writeNBT(this, null);
+	CapabilityPacket packet = new CapabilityPacket(BREED_CAPABILITY, entity, compound);
+
+	NetworkHandler.INSTANCE.send(TRACKING_ENTITY_AND_SELF.with(() -> entity), packet);
+    }
+
     void setInLove(int inLove);
 
     default void setInLove(@Nullable PlayerEntity player) {
@@ -185,6 +185,20 @@ public interface IBreed {
     }
 
     void setPlayerInLove(UUID playerInLove);
+
+    /**
+     * Override CreatureEntity::attackEntityFrom
+     */
+    default boolean shouldAttackEntityFrom(DamageSource source, float amount) {
+	CreatureEntity creature = this.getCreatureEntity();
+
+	if (creature.isInvulnerableTo(source))
+	    return false;
+
+	this.resetInLove();
+
+	return true;
+    }
 
     /**
      * Override CreatureEntity::updateAITasks

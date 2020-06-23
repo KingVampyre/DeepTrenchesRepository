@@ -1,10 +1,10 @@
 package github.kingvampire.DeepTrenches.api.entity.goals;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.group.GroupProvider.GROUP_CAPABILITY;
-import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.RANDOM_SWIM_CHANCE;
 import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 
 import github.kingvampire.DeepTrenches.api.capabilities.group.IGroup;
+import github.kingvampire.DeepTrenches.core.init.ModAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 
@@ -13,7 +13,7 @@ public class RandomGroupSwimGoal extends RandomSwimmingGoal {
     protected final IGroup igroup;
 
     public RandomGroupSwimGoal(CreatureEntity creature) {
-	this(creature, (int) creature.getAttribute(RANDOM_SWIM_CHANCE).getBaseValue());
+	this(creature, (int) creature.getAttribute(ModAttributes.RANDOM_SWIM_CHANCE).getBaseValue());
     }
 
     public RandomGroupSwimGoal(CreatureEntity creature, int chance) {

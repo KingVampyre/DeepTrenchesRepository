@@ -1,7 +1,7 @@
 package github.kingvampire.DeepTrenches.api.entity.goals;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.anger.AngerProvider.ANGER_CAPABILITY;
-import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.MOVEMENT_SPEED_BOOST;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.MOVEMENT_SPEED_BOOST;
 import static net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE;
 import static net.minecraft.entity.ai.goal.Goal.Flag.MOVE;
 

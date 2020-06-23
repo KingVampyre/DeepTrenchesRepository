@@ -18,6 +18,7 @@ import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 import static net.minecraft.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE;
 
 import github.kingvampire.DeepTrenches.api.capabilities.lit.ILit;
+import github.kingvampire.DeepTrenches.core.init.ModAttributes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -159,7 +160,7 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
 	this.getAttribute(FOLLOW_RANGE).setBaseValue(4); // 16
 	this.getAttribute(MAX_HEALTH).setBaseValue(16);
 	this.getAttribute(MOVEMENT_SPEED).setBaseValue(1.24F);
-	this.getAttribute(MOVEMENT_SPEED_BOOST).setBaseValue(2.58F);
+	this.getAttribute(ModAttributes.MOVEMENT_SPEED_BOOST).setBaseValue(2.58F);
 
 	this.getAttribute(BLINK_INTERVAL).setBaseValue(6); // 3
 	this.getAttribute(BLINK_RANGE).setBaseValue(12);
@@ -175,6 +176,8 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
 	this.getAttribute(LURE_DELAY).setBaseValue(640);
 	this.getAttribute(MAX_LURING).setBaseValue(18); // 6
 	this.getAttribute(MIN_LURING).setBaseValue(9); // 3
+	
+	this.getAttribute(DROP_TOOTH_CHANCE).setBaseValue(0.6F);
 	this.getAttribute(PREY_DETECTION).setBaseValue(1.25F); // 2
 
 	this.getAttributes().registerAttribute(SUBORBITAL_DELAY).setBaseValue(230);
@@ -243,8 +246,6 @@ public class BarbeledLoosejawEntity extends LightLoosejawEntity {
 		ilit.setLitState(ALL_LIT);
 	    else
 		ilit.setLitState(ALL_UNLIT);
-
-	    ilit.sendPacket(this);
 	}
     }
 

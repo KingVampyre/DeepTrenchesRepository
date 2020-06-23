@@ -69,6 +69,7 @@ public class ModItems {
     public static final Item PLUM_BOAT = null;
     public static final Item PLUM_STICK = null;
     public static final Item PURFUNGA_STICK = null;
+    public static final Item PURPROUND = null;
     public static final Item SMALLTOOTH_DRAGONFISH = null;
     public static final Item SMALLTOOTH_DRAGONFISH_BUCKET = null;
     public static final Item SMALLTOOTH_DRAGONFISH_SPAWN_EGG = null;
@@ -83,5 +84,6 @@ public class ModItems {
     public static final Item THUNDERCLOUD_PLUM = null;
     public static final Item THUNDERCLOUD_PLUM_BOAT = null;
     public static final Item THUNDERCLOUD_PLUM_STICK = null;
+    public static final Item WEEPY_HOLLOWER = null;
 
 }

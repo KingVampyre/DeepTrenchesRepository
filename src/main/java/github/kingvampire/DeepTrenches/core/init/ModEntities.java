@@ -5,7 +5,7 @@ import static net.minecraft.entity.EntityClassification.CREATURE;
 import static net.minecraft.entity.EntityClassification.WATER_CREATURE;
 import static net.minecraft.util.registry.Registry.ENTITY_TYPE;
 
-import github.kingvampire.DeepTrenches.api.entity.ModBoatEntity;
+import github.kingvampire.DeepTrenches.api.entity.tileentity.ModBoatEntity;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
 import github.kingvampire.DeepTrenches.core.entity.BettaEntity;
 import github.kingvampire.DeepTrenches.core.entity.BlackLoosejawEntity;

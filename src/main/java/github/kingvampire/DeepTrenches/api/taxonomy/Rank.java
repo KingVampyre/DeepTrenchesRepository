@@ -60,7 +60,7 @@ public class Rank extends ForgeRegistryEntry<Rank> {
     }
 
     public RankInstance getDefaultInstance() {
-	return new RankInstance(this, this.hasSubspecies() ? this.getRandomSubspecies() : null);
+	return new RankInstance(this);
     }
 
     public FamilyTaxon getFamily() {
@@ -73,6 +73,10 @@ public class Rank extends ForgeRegistryEntry<Rank> {
 
     public OrderTaxon getOrder() {
 	return this.order;
+    }
+
+    public RankInstance getRandomInstance() {
+	return new RankInstance(this, this.hasSubspecies() ? this.getRandomSubspecies() : null);
     }
 
     public SubspeciesTaxon getRandomSubspecies() {

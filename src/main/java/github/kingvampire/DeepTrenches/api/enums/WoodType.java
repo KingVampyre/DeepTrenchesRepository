@@ -29,6 +29,7 @@ import github.kingvampire.DeepTrenches.api.world.gen.trees.ModTree;
 import github.kingvampire.DeepTrenches.core.blocks.CapBlock;
 import github.kingvampire.DeepTrenches.core.blocks.FungusBlock;
 import github.kingvampire.DeepTrenches.core.blocks.StorceanSaplingBlock;
+import github.kingvampire.DeepTrenches.core.blocks.TallStorceanSaplingBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModDoorBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModFenceBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModFenceGateBlock;
@@ -37,7 +38,6 @@ import github.kingvampire.DeepTrenches.core.blocks.base.ModLogBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModPlanksBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModPressurePlateBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModRotatedPillarBlock;
-import github.kingvampire.DeepTrenches.core.blocks.base.ModSaplingBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModSlabBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModStairsBlock;
 import github.kingvampire.DeepTrenches.core.blocks.base.ModStandingSignBlock;
@@ -217,7 +217,7 @@ public enum WoodType implements IStringSerializable {
 	Properties properties = Properties.from(OAK_SAPLING).lightValue(light);
 
 	if (SPROOM == this || STORTREEAN == this) {
-	    Block block = new StorceanSaplingBlock(this.tree, properties);
+	    Block block = new TallStorceanSaplingBlock(this.tree, properties);
 
 	    return block.setRegistryName(new ResourceLocation(MODID, this + "_sapling"));
 	}
@@ -241,7 +241,7 @@ public enum WoodType implements IStringSerializable {
 	    return block.setRegistryName(new ResourceLocation(MODID, this + "_sapling"));
 	}
 
-	Block block = new ModSaplingBlock(this.tree, fungus);
+	Block block = new StorceanSaplingBlock(this.tree, fungus);
 
 	return block.setRegistryName(new ResourceLocation(MODID, this + "_sapling"));
     }

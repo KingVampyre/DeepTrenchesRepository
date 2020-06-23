@@ -8,4 +8,8 @@ public class SubspeciesTaxon extends Taxon {
 	super(SUBSPECIES, name);
     }
 
+    public SubspeciesTaxon(String scientificName, String vulgarName) {
+	super(SUBSPECIES, scientificName, vulgarName);
+    }
+
 }

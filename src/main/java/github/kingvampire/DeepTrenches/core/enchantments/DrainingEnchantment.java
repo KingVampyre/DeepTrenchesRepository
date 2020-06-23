@@ -9,8 +9,8 @@ import static net.minecraft.inventory.EquipmentSlotType.MAINHAND;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
 import github.kingvampire.DeepTrenches.core.init.DamageSources;
 import github.kingvampire.DeepTrenches.core.init.ModEffects;
-import github.kingvampire.DeepTrenches.core.init.ModEnchantments;
 import github.kingvampire.DeepTrenches.core.potion.DrainingEffectInstance;
+import github.kingvampire.DeepTrenches.core.util.ModEnchantmentHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -69,8 +69,8 @@ public class DrainingEnchantment extends Enchantment {
 						ItemStack stack = AdaiggerEntity.getItemStack(arrow);
 						LivingEntity livingEntity = event.getEntityLiving();
 
-						if (ModEnchantments.hasDraining(stack) && trueSource != livingEntity)
-							ModEnchantments.applyDraining(livingEntity, trueSource, stack);
+						if (ModEnchantmentHelper.hasDraining(stack) && trueSource != livingEntity)
+							ModEnchantmentHelper.applyDraining(livingEntity, trueSource, stack);
 					}
 				}
 			}
@@ -91,8 +91,8 @@ public class DrainingEnchantment extends Enchantment {
 					ItemStack stack = trueSource.getHeldItem(hand);
 					LivingEntity livingEntity = event.getEntityLiving();
 
-					if (ModEnchantments.hasDraining(stack) && trueSource != livingEntity)
-						ModEnchantments.applyDraining(event.getEntityLiving(), trueSource, stack);
+					if (ModEnchantmentHelper.hasDraining(stack) && trueSource != livingEntity)
+						ModEnchantmentHelper.applyDraining(event.getEntityLiving(), trueSource, stack);
 				}
 			}
 		}
@@ -110,7 +110,7 @@ public class DrainingEnchantment extends Enchantment {
 				int amplifier = effectInstance.getAmplifier() * 2;
 
 				if (trueSource == source.getTrueSource() && trueSource != livingEntity)
-					ModEnchantments.applyDrainingBonus(livingEntity, trueSource, amplifier);
+					ModEnchantmentHelper.applyDrainingBonus(livingEntity, trueSource, amplifier);
 			}
 		}
 

@@ -4,7 +4,7 @@ import static github.kingvampire.DeepTrenches.api.capabilities.tame.TameProvider
 
 import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
 import github.kingvampire.DeepTrenches.api.entity.DragonfishEntity;
-import github.kingvampire.DeepTrenches.api.entity.LureGoal;
+import github.kingvampire.DeepTrenches.api.entity.goals.LureGoal;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class DragonfishLureGoal extends LureGoal {

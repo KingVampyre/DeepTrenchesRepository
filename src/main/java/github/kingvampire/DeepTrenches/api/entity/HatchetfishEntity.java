@@ -2,22 +2,19 @@ package github.kingvampire.DeepTrenches.api.entity;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.lit.LitProvider.LIT_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.taxonomy.TaxonomyProvider.TAXONOMY_CAPABILITY;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.MOVEMENT_SPEED_BOOST;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.RANDOM_SWIM_CHANCE;
 
 import github.kingvampire.DeepTrenches.api.capabilities.lit.ILit;
 import github.kingvampire.DeepTrenches.api.entity.goals.GroupPanicGoal;
 import github.kingvampire.DeepTrenches.api.taxonomy.RankInstance;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
 public abstract class HatchetfishEntity extends AbstractFishEntity {
-
-    public static final IAttribute RANDOM_SWIM_CHANCE = new RangedAttribute(null, "generic.randomSwimChance", 0, 0, 100);
-    public static final IAttribute MOVEMENT_SPEED_BOOST = new RangedAttribute(null, "generic.movementSpeedBoost", 0.7F, 0, 1024).setShouldWatch(true);
 
     public HatchetfishEntity(EntityType<? extends AbstractFishEntity> type, World worldIn) {
 	super(type, worldIn);
@@ -28,6 +25,16 @@ public abstract class HatchetfishEntity extends AbstractFishEntity {
 	super.livingTick();
 
 	this.updateLitState();
+
+	LazyOptional<ILit> lit = this.getCapability(LIT_CAPABILITY);
+
+	if (lit.isPresent()) {
+	    ILit iLit = lit.orElseThrow(IllegalArgumentException::new);
+
+	    if (!this.world.isRemote())
+		iLit.sendPacket(this);
+	}
+
     }
 
     @Override
@@ -54,12 +61,6 @@ public abstract class HatchetfishEntity extends AbstractFishEntity {
 	});
     }
 
-    protected void updateLitState() {
-	LazyOptional<ILit> lit = this.getCapability(LIT_CAPABILITY);
-
-	if (!this.world.isRemote() && lit.isPresent())
-	    lit.orElseThrow(IllegalArgumentException::new).sendPacket(this);
-
-    }
+    protected abstract void updateLitState();
 
 }

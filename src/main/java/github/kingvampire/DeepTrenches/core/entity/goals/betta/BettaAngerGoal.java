@@ -19,7 +19,13 @@ public class BettaAngerGoal extends AngerGoal {
     protected void alert(CreatureEntity creature) {
 	LazyOptional<IGroup> group = creature.getCapability(GROUP_CAPABILITY);
 
-	group.ifPresent(igroup -> this.setAttackTarget(igroup.getGroupLeader(), this.target));
+	if (group.isPresent()) {
+	    IGroup igroup = group.orElseThrow(IllegalArgumentException::new);
+
+	    if (igroup.hasGroupLeader())
+		this.setAttackTarget(igroup.getGroupLeader(), this.target);
+	}
+
     }
 
     @Override
@@ -28,7 +34,7 @@ public class BettaAngerGoal extends AngerGoal {
 	LazyOptional<ITame> tame = creature.getCapability(TAME_CAPABILITY);
 
 	if (tame.isPresent())
-	    return tame.orElseThrow(IllegalArgumentException::new).isTamed();
+	    return !tame.orElseThrow(IllegalArgumentException::new).isTamed();
 
 	if (group.isPresent())
 	    return group.orElseThrow(IllegalArgumentException::new).hasGroupLeader();

@@ -13,7 +13,7 @@ import static net.minecraft.util.math.RayTraceResult.Type.MISS;
 import java.util.List;
 import java.util.function.Predicate;
 
-import github.kingvampire.DeepTrenches.api.entity.ModBoatEntity;
+import github.kingvampire.DeepTrenches.api.entity.tileentity.ModBoatEntity;
 import github.kingvampire.DeepTrenches.api.enums.WoodType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

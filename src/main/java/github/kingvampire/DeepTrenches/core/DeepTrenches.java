@@ -1,5 +1,8 @@
 package github.kingvampire.DeepTrenches.core;
 
+import static github.kingvampire.DeepTrenches.core.init.ModColorMaps.STORCEAN_FOLIAGE;
+import static github.kingvampire.DeepTrenches.core.init.ModColorMaps.STORCEAN_MOSOIL;
+import static github.kingvampire.DeepTrenches.core.init.ModColorMaps.STORCEAN_WATER;
 import static github.kingvampire.DeepTrenches.core.init.ModItems.LOOSEJAW_TOOTH;
 import static github.kingvampire.DeepTrenches.core.init.ModPotions.LONG_SOFTBONES;
 import static github.kingvampire.DeepTrenches.core.init.ModPotions.LONG_STRONG_SOFTBONES;
@@ -16,6 +19,8 @@ import static net.minecraft.item.Items.SPLASH_POTION;
 import static net.minecraft.potion.Potions.AWKWARD;
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
 
+import java.io.IOException;
+
 import github.kingvampire.DeepTrenches.api.capabilities.age.Age;
 import github.kingvampire.DeepTrenches.api.capabilities.age.AgeStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
@@ -31,16 +36,19 @@ import github.kingvampire.DeepTrenches.api.capabilities.group.IGroup;
 import github.kingvampire.DeepTrenches.api.capabilities.lit.ILit;
 import github.kingvampire.DeepTrenches.api.capabilities.lit.Lit;
 import github.kingvampire.DeepTrenches.api.capabilities.lit.LitStorage;
+import github.kingvampire.DeepTrenches.api.capabilities.pollen.IPollen;
+import github.kingvampire.DeepTrenches.api.capabilities.pollen.Pollen;
+import github.kingvampire.DeepTrenches.api.capabilities.pollen.PollenStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.Tame;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.TameStorage;
 import github.kingvampire.DeepTrenches.api.capabilities.taxonomy.ITaxonomy;
 import github.kingvampire.DeepTrenches.api.capabilities.taxonomy.Taxonomy;
 import github.kingvampire.DeepTrenches.api.capabilities.taxonomy.TaxonomyStorage;
-import github.kingvampire.DeepTrenches.api.entity.ModBoatEntity;
-import github.kingvampire.DeepTrenches.api.entity.ModSignTileEntity;
-import github.kingvampire.DeepTrenches.api.entity.renderer.ModBoatRenderer;
-import github.kingvampire.DeepTrenches.api.entity.renderer.ModSignTileEntityRenderer;
+import github.kingvampire.DeepTrenches.api.entity.tileentity.ModBoatEntity;
+import github.kingvampire.DeepTrenches.api.entity.tileentity.ModSignTileEntity;
+import github.kingvampire.DeepTrenches.api.entity.tileentity.renderer.ModBoatRenderer;
+import github.kingvampire.DeepTrenches.api.entity.tileentity.renderer.ModSignTileEntityRenderer;
 import github.kingvampire.DeepTrenches.api.loot_tables.conditions.CheckWoodType;
 import github.kingvampire.DeepTrenches.core.brewing.ModBrewingRecipe;
 import github.kingvampire.DeepTrenches.core.entity.AdaiggerEntity;
@@ -64,12 +72,14 @@ import github.kingvampire.DeepTrenches.core.entity.renderer.dragonfishes.Smallto
 import github.kingvampire.DeepTrenches.core.proxy.ClientProxy;
 import github.kingvampire.DeepTrenches.core.proxy.CommonProxy;
 import github.kingvampire.DeepTrenches.core.util.NetworkHandler;
-import github.kingvampire.DeepTrenches.core.util.packets.AgeCapabilityPacket;
-import github.kingvampire.DeepTrenches.core.util.packets.LitCapabilityPacket;
-import github.kingvampire.DeepTrenches.core.util.packets.TaxonomyCapabilityPacket;
+import github.kingvampire.DeepTrenches.core.util.packets.CapabilityPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.ColorMapLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -111,6 +121,27 @@ public class DeepTrenches {
 	RenderingRegistry.registerEntityRenderingHandler(SmalltoothDragonfishEntity.class,
 		SmalltoothDragonfishRenderer::new);
 	RenderingRegistry.registerEntityRenderingHandler(StaspEntity.class, StaspRenderer::new);
+
+	Minecraft minecraft = event.getMinecraftSupplier().get();
+	IResourceManager resourceManager = minecraft.getResourceManager();
+
+	try {
+	    ResourceLocation storceanFoliageId = new ResourceLocation(MODID, "textures/colormap/storcean_foliage.png");
+	    ResourceLocation storceanMosoildId = new ResourceLocation(MODID, "textures/colormap/storcean_mosoil.png");
+	    ResourceLocation storceanWaterId = new ResourceLocation(MODID, "textures/colormap/storcean_water.png");
+
+	    int[] storceanFoliage = ColorMapLoader.loadColors(resourceManager, storceanFoliageId);
+	    int[] storceanMosoild = ColorMapLoader.loadColors(resourceManager, storceanMosoildId);
+	    int[] storceanWater = ColorMapLoader.loadColors(resourceManager, storceanWaterId);
+
+	    STORCEAN_FOLIAGE.setColorizer(storceanFoliage);
+	    STORCEAN_MOSOIL.setColorizer(storceanMosoild);
+	    STORCEAN_WATER.setColorizer(storceanWater);
+
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
@@ -118,8 +149,7 @@ public class DeepTrenches {
 
 	    BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(
 		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), AWKWARD)),
-		    LOOSEJAW_TOOTH,
-		    PotionUtils.addPotionToItemStack(new ItemStack(POTION), SOFTBONES)));
+		    LOOSEJAW_TOOTH, PotionUtils.addPotionToItemStack(new ItemStack(POTION), SOFTBONES)));
 
 	    BrewingRecipeRegistry.addRecipe(
 		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), SOFTBONES)),
@@ -132,7 +162,8 @@ public class DeepTrenches {
 		    PotionUtils.addPotionToItemStack(new ItemStack(SPLASH_POTION), LONG_SOFTBONES));
 
 	    BrewingRecipeRegistry.addRecipe(
-		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_STRONG_SOFTBONES)),
+		    Ingredient
+			    .fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_STRONG_SOFTBONES)),
 		    Ingredient.fromItems(GUNPOWDER),
 		    PotionUtils.addPotionToItemStack(new ItemStack(SPLASH_POTION), LONG_STRONG_SOFTBONES));
 
@@ -142,24 +173,20 @@ public class DeepTrenches {
 		    PotionUtils.addPotionToItemStack(new ItemStack(SPLASH_POTION), STRONG_SOFTBONES));
 
 	    BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(
-		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), SOFTBONES)),
-		    REDSTONE,
+		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), SOFTBONES)), REDSTONE,
 		    PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_SOFTBONES)));
 
 	    BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(
 		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), STRONG_SOFTBONES)),
-		    REDSTONE,
-		    PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_STRONG_SOFTBONES)));
-	    
+		    REDSTONE, PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_STRONG_SOFTBONES)));
+
 	    BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(
 		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_SOFTBONES)),
-		    GLOWSTONE_DUST,
-		    PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_STRONG_SOFTBONES)));	    
+		    GLOWSTONE_DUST, PotionUtils.addPotionToItemStack(new ItemStack(POTION), LONG_STRONG_SOFTBONES)));
 
 	    BrewingRecipeRegistry.addRecipe(new ModBrewingRecipe(
 		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(POTION), SOFTBONES)),
-		    GLOWSTONE_DUST,
-		    PotionUtils.addPotionToItemStack(new ItemStack(POTION), STRONG_SOFTBONES)));
+		    GLOWSTONE_DUST, PotionUtils.addPotionToItemStack(new ItemStack(POTION), STRONG_SOFTBONES)));
 
 	    BrewingRecipeRegistry.addRecipe(
 		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(SPLASH_POTION), SOFTBONES)),
@@ -173,7 +200,8 @@ public class DeepTrenches {
 		    PotionUtils.addPotionToItemStack(new ItemStack(LINGERING_POTION), LONG_SOFTBONES));
 
 	    BrewingRecipeRegistry.addRecipe(
-		    Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(SPLASH_POTION), LONG_STRONG_SOFTBONES)),
+		    Ingredient.fromStacks(
+			    PotionUtils.addPotionToItemStack(new ItemStack(SPLASH_POTION), LONG_STRONG_SOFTBONES)),
 		    Ingredient.fromItems(DRAGON_BREATH),
 		    PotionUtils.addPotionToItemStack(new ItemStack(LINGERING_POTION), LONG_STRONG_SOFTBONES));
 
@@ -189,17 +217,12 @@ public class DeepTrenches {
 	CapabilityManager.INSTANCE.register(IGroup.class, new GroupStorage(), Group::new);
 	CapabilityManager.INSTANCE.register(IBreed.class, new BreedStorage(), Breed::new);
 	CapabilityManager.INSTANCE.register(ILit.class, new LitStorage(), Lit::new);
+	CapabilityManager.INSTANCE.register(IPollen.class, new PollenStorage(), Pollen::new);
 	CapabilityManager.INSTANCE.register(ITame.class, new TameStorage(), Tame::new);
 	CapabilityManager.INSTANCE.register(ITaxonomy.class, new TaxonomyStorage(), Taxonomy::new);
 
-	NetworkHandler.INSTANCE.registerMessage(0, TaxonomyCapabilityPacket.class, TaxonomyCapabilityPacket::encode,
-		TaxonomyCapabilityPacket::decode, TaxonomyCapabilityPacket::handle);
-
-	NetworkHandler.INSTANCE.registerMessage(1, LitCapabilityPacket.class, LitCapabilityPacket::encode,
-		LitCapabilityPacket::decode, LitCapabilityPacket::handle);
-
-	NetworkHandler.INSTANCE.registerMessage(2, AgeCapabilityPacket.class, AgeCapabilityPacket::encode,
-		AgeCapabilityPacket::decode, AgeCapabilityPacket::handle);
+	NetworkHandler.INSTANCE.registerMessage(0, CapabilityPacket.class, CapabilityPacket::encode,
+		CapabilityPacket::decode, CapabilityPacket::handle);
     }
 
     private void loadComplete(FMLLoadCompleteEvent event) {

@@ -8,6 +8,7 @@ import static net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH;
 import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 import static net.minecraft.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE;
 
+import github.kingvampire.DeepTrenches.core.init.ModAttributes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
@@ -49,7 +50,7 @@ public class BlackLoosejawEntity extends BarbeledLoosejawEntity {
 	this.getAttribute(FOLLOW_RANGE).setBaseValue(6); // 16
 	this.getAttribute(MAX_HEALTH).setBaseValue(18);
 	this.getAttribute(MOVEMENT_SPEED).setBaseValue(1.26F);
-	this.getAttribute(MOVEMENT_SPEED_BOOST).setBaseValue(2.6F);
+	this.getAttribute(ModAttributes.MOVEMENT_SPEED_BOOST).setBaseValue(2.6F);
 
 	this.getAttribute(BLINK_INTERVAL).setBaseValue(3);
 	this.getAttribute(BLINK_RANGE).setBaseValue(14);
@@ -66,6 +67,7 @@ public class BlackLoosejawEntity extends BarbeledLoosejawEntity {
 	this.getAttribute(MAX_LURING).setBaseValue(9); // 3
 	this.getAttribute(MIN_LURING).setBaseValue(6); // 2
 
+	this.getAttribute(DROP_TOOTH_CHANCE).setBaseValue(0.72F);
 	this.getAttribute(PREY_DETECTION).setBaseValue(1.25F); // 3
 
 	this.getAttribute(SUBORBITAL_DELAY).setBaseValue(300);

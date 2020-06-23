@@ -10,7 +10,7 @@ import static github.kingvampire.DeepTrenches.api.enums.LitState.LURE;
 import static github.kingvampire.DeepTrenches.api.enums.LitState.RECOGNITION;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.LIGHT_LOOSEJAW;
 import static github.kingvampire.DeepTrenches.core.init.ModItems.LIGHT_LOOSEJAW_BUCKET;
-import static github.kingvampire.DeepTrenches.core.init.ModTaxons.REMARKABLE_LIGHT;
+import static github.kingvampire.DeepTrenches.core.init.ModTaxons.REMARKABLE_LIGHT_LOOSEJAW;
 import static net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE;
 import static net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE;
 import static net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH;
@@ -25,6 +25,7 @@ import github.kingvampire.DeepTrenches.api.entity.goals.AngryAttackGoal;
 import github.kingvampire.DeepTrenches.api.taxonomy.SubspeciesTaxon;
 import github.kingvampire.DeepTrenches.core.entity.goals.dragonfish.DragonfishChaseGoal;
 import github.kingvampire.DeepTrenches.core.entity.goals.loosejaw.LoosejawPreyingGoal;
+import github.kingvampire.DeepTrenches.core.init.ModAttributes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.fish.CodEntity;
 import net.minecraft.entity.passive.fish.SalmonEntity;
@@ -90,7 +91,7 @@ public class LightLoosejawEntity extends TamableDragonfishEntity {
 	this.getAttribute(FOLLOW_RANGE).setBaseValue(8); // 16
 	this.getAttribute(MAX_HEALTH).setBaseValue(16F);
 	this.getAttribute(MOVEMENT_SPEED).setBaseValue(1.31F);
-	this.getAttribute(MOVEMENT_SPEED_BOOST).setBaseValue(2.68F); // 2.68
+	this.getAttribute(ModAttributes.MOVEMENT_SPEED_BOOST).setBaseValue(2.68F); // 2.68
 
 	LazyOptional<ITaxonomy> taxonomy = this.getCapability(TAXONOMY_CAPABILITY);
 
@@ -98,11 +99,11 @@ public class LightLoosejawEntity extends TamableDragonfishEntity {
 	    ITaxonomy itaxonomy = taxonomy.orElseThrow(IllegalArgumentException::new);
 	    SubspeciesTaxon subspecies = itaxonomy.getSubspecies();
 
-	    this.getAttribute(BLINK_INTERVAL).setBaseValue(subspecies == REMARKABLE_LIGHT ? 2 : 3);
-	    this.getAttribute(BLINK_RANGE).setBaseValue(subspecies == REMARKABLE_LIGHT ? 12 : 5);
-	    this.getAttribute(BLINKING_DELAY).setBaseValue(subspecies == REMARKABLE_LIGHT ? 70 : 115);
-	    this.getAttribute(MAX_BLINKS).setBaseValue(subspecies == REMARKABLE_LIGHT ? 16 : 4);
-	    this.getAttribute(MIN_BLINKS).setBaseValue(subspecies == REMARKABLE_LIGHT ? 7 : 2);
+	    this.getAttribute(BLINK_INTERVAL).setBaseValue(subspecies == REMARKABLE_LIGHT_LOOSEJAW ? 2 : 3);
+	    this.getAttribute(BLINK_RANGE).setBaseValue(subspecies == REMARKABLE_LIGHT_LOOSEJAW ? 12 : 5);
+	    this.getAttribute(BLINKING_DELAY).setBaseValue(subspecies == REMARKABLE_LIGHT_LOOSEJAW ? 70 : 115);
+	    this.getAttribute(MAX_BLINKS).setBaseValue(subspecies == REMARKABLE_LIGHT_LOOSEJAW ? 16 : 4);
+	    this.getAttribute(MIN_BLINKS).setBaseValue(subspecies == REMARKABLE_LIGHT_LOOSEJAW ? 7 : 2);
 	}
 
 	this.getAttribute(LURE_MAX_LIT).setBaseValue(16); // 160
@@ -114,6 +115,7 @@ public class LightLoosejawEntity extends TamableDragonfishEntity {
 	this.getAttribute(MAX_LURING).setBaseValue(12); // 4
 	this.getAttribute(MIN_LURING).setBaseValue(6); // 2
 
+	this.getAttribute(DROP_TOOTH_CHANCE).setBaseValue(0.53F);
 	this.getAttribute(PREY_DETECTION).setBaseValue(1.6); // 4
     }
 
@@ -156,7 +158,7 @@ public class LightLoosejawEntity extends TamableDragonfishEntity {
 
 	    else if (this.blinkGoal.shouldBlink() || this.respondBlinkGoal.shouldBlink())
 
-		if (itaxonomy.getSubspecies() == REMARKABLE_LIGHT)
+		if (itaxonomy.getSubspecies() == REMARKABLE_LIGHT_LOOSEJAW)
 		    ilit.setLitState(RECOGNITION);
 		else
 		    ilit.setLitState(LURE);
@@ -166,7 +168,6 @@ public class LightLoosejawEntity extends TamableDragonfishEntity {
 	    else
 		ilit.setLitState(ALL_UNLIT);
 
-	    super.updateLitState();
 	}
     }
 

@@ -1,10 +1,11 @@
 package github.kingvampire.DeepTrenches.api.capabilities.group;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.entity.CreatureEntity;
@@ -12,7 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 
@@ -20,26 +21,33 @@ public class GroupStorage implements IStorage<IGroup> {
 
     @Override
     public void readNBT(Capability<IGroup> capability, IGroup instance, Direction side, INBT nbt) {
-	CreatureEntity creature = instance.getCreatureEntity();
-	ServerWorld world = (ServerWorld) creature.getEntityWorld();
+	World world = instance.getWorld();
 
 	CompoundNBT compound = (CompoundNBT) nbt;
-	ListNBT listNBT = compound.getList("Group", 8);
-	Set<CreatureEntity> group = Sets.newHashSet();
+	ListNBT listNBT = compound.getList("Members", 8);
+
+	Set<CreatureEntity> members = Sets.newHashSet();
+	Map<CreatureEntity, Integer> memberTicks = Maps.newHashMap();
 
 	for (int i = 0; i < listNBT.size(); i++) {
 	    CompoundNBT compoundNBT = listNBT.getCompound(i);
-	    UUID uuid = UUID.fromString(compoundNBT.getString("UUID"));
 
-	    group.add(CreatureEntity.class.cast(world.getEntityByUuid(uuid)));
+	    int id = compoundNBT.getInt("ID");
+	    int ticks = compoundNBT.getInt("Ticks");
+
+	    CreatureEntity creature = (CreatureEntity) world.getEntityByID(id);
+
+	    members.add(creature);
+	    memberTicks.put(creature, ticks);
 	}
 
-	instance.setGroup(group);
+	instance.setGroup(members);
+	instance.setMemberTicks(memberTicks);
 
 	if (compound.contains("GroupLeader")) {
-	    UUID uuid = UUID.fromString(compound.getString("UUID"));
+	    int id = compound.getInt("GroupLeader");
 
-	    instance.setGroupLeader(CreatureEntity.class.cast(world.getEntityByUuid(uuid)));
+	    instance.setGroupLeader(CreatureEntity.class.cast(world.getEntityByID(id)));
 	}
 
     }
@@ -55,17 +63,18 @@ public class GroupStorage implements IStorage<IGroup> {
 	    CompoundNBT compoundNBT = new CompoundNBT();
 	    CreatureEntity creature = entities.get(i);
 
-	    compoundNBT.putString("UUID", creature.getUniqueID().toString());
+	    compoundNBT.putInt("ID", creature.getEntityId());
+	    compoundNBT.putInt("Ticks", instance.getMemberTicks().get(creature));
 
 	    listNBT.add(i, compoundNBT);
 	}
 
 	CreatureEntity groupLeader = instance.getGroupLeader();
 
-	compound.put("Group", listNBT);
+	compound.put("Members", listNBT);
 
 	if (groupLeader != null)
-	    compound.putUniqueId("GroupLeader", groupLeader.getUniqueID());
+	    compound.putInt("GroupLeader", groupLeader.getEntityId());
 
 	return compound;
     }

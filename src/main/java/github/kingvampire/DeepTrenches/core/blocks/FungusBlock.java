@@ -1,5 +1,6 @@
 package github.kingvampire.DeepTrenches.core.blocks;
 
+import static github.kingvampire.DeepTrenches.core.init.ModBlocks.MOSOIL;
 import static net.minecraft.block.Blocks.AIR;
 import static net.minecraft.block.Blocks.SPONGE;
 import static net.minecraft.block.Blocks.WET_SPONGE;
@@ -28,88 +29,87 @@ import net.minecraft.world.World;
 
 public class FungusBlock extends ModSaplingBlock {
 
-	private boolean canGrowInLand;
+    private boolean canGrowInLand;
 
-	public FungusBlock(ModTree tree, Properties properties, boolean canGrowInLand) {
-		super(tree, properties);
+    public FungusBlock(ModTree tree, Properties properties, boolean canGrowInLand) {
+	super(tree, properties);
 
-		this.canGrowInLand = canGrowInLand;
+	this.canGrowInLand = canGrowInLand;
+    }
+
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	super.fillStateContainer(builder);
+
+	builder.add(WATERLOGGED);
+    }
+
+    @SuppressWarnings("deprecation")
+    public IFluidState getFluidState(BlockState state) {
+	return state.get(WATERLOGGED) ? WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+
+	if (!state.get(WATERLOGGED) && !this.canGrowInLand)
+	    return false;
+
+	IFluidState ifluidstate = worldIn.getFluidState(pos);
+	Fluid fluid = ifluidstate.getFluid();
+
+	if (fluid == WATER)
+	    return super.isValidPosition(state, worldIn, pos);
+	else if (fluid == EMPTY)
+	    return this.canGrowInLand ? super.isValidPosition(state, worldIn, pos) : false;
+
+	return false;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+	IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+
+	return super.getStateForPlacement(context).with(WATERLOGGED, ifluidstate.getFluid() == WATER);
+    }
+
+    @Override
+    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	return state.getBlock() == MOSOIL;
+    }
+
+    @Override
+    public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+
+	if (!this.isValidPosition(state, worldIn, pos))
+	    worldIn.setBlockState(pos, AIR.getDefaultState());
+
+	super.tick(state, worldIn, pos, random);
+    }
+
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	    BlockPos currentPos, BlockPos facingPos) {
+
+	Block block = facingState.getBlock();
+
+	if (stateIn.get(WATERLOGGED) && block == SPONGE || block == WET_SPONGE) {
+	    worldIn.setBlockState(currentPos, stateIn.with(WATERLOGGED, false), 4);
+
+	    if (!this.canGrowInLand)
+		return Blocks.AIR.getDefaultState();
+	    else
+		return stateIn.with(WATERLOGGED, false);
 	}
 
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	IFluidState fluidState = worldIn.getFluidState(facingPos);
+	BlockState state = worldIn.getBlockState(currentPos);
 
-		builder.add(WATERLOGGED);
-	}
+	if (fluidState.getFluid() == FLOWING_WATER)
+	    return state;
 
-	@SuppressWarnings("deprecation")
-	public IFluidState getFluidState(BlockState state) {
-		return state.get(WATERLOGGED) ? WATER.getStillFluidState(false) : super.getFluidState(state);
-	}
+	if (fluidState.getFluid() == WATER)
+	    return state.with(WATERLOGGED, true);
 
-	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-
-		if (!state.get(WATERLOGGED) && !this.canGrowInLand)
-			return false;
-
-		IFluidState ifluidstate = worldIn.getFluidState(pos);
-		Fluid fluid = ifluidstate.getFluid();
-
-		if (fluid == WATER)
-			return super.isValidPosition(state, worldIn, pos);
-		else if (fluid == EMPTY)
-			return this.canGrowInLand ? super.isValidPosition(state, worldIn, pos) : false;
-
-		return false;
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-
-		return super.getStateForPlacement(context).with(WATERLOGGED, ifluidstate.getFluid() == WATER);
-	}
-
-	@Override
-	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		// TODO BlockBush::isValidGround
-		return super.isValidGround(state, worldIn, pos);
-	}
-
-	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
-
-		if (!this.isValidPosition(state, worldIn, pos))
-			worldIn.setBlockState(pos, AIR.getDefaultState());
-
-		super.tick(state, worldIn, pos, random);
-	}
-
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
-
-		Block block = facingState.getBlock();
-
-		if (stateIn.get(WATERLOGGED) && block == SPONGE || block == WET_SPONGE) {
-			worldIn.setBlockState(currentPos, stateIn.with(WATERLOGGED, false), 4);
-
-			if (!this.canGrowInLand)
-				return Blocks.AIR.getDefaultState();
-			else
-				return stateIn.with(WATERLOGGED, false);
-		}
-
-		IFluidState fluidState = worldIn.getFluidState(facingPos);
-		BlockState state = worldIn.getBlockState(currentPos);
-
-		if (fluidState.getFluid() == FLOWING_WATER)
-			return state;
-
-		if (fluidState.getFluid() == WATER)
-			return state.with(WATERLOGGED, true);
-
-		return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-	}
+	return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
 
 }

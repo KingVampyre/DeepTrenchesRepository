@@ -2,12 +2,10 @@ package github.kingvampire.DeepTrenches.core.items;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.taxonomy.TaxonomyProvider.TAXONOMY_CAPABILITY;
 import static github.kingvampire.DeepTrenches.core.util.Constants.MODID;
-import static github.kingvampire.DeepTrenches.core.util.NetworkHandler.INSTANCE;
 import static net.minecraft.entity.SpawnReason.BUCKET;
 import static net.minecraft.fluid.Fluids.WATER;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 import static net.minecraft.util.text.TextFormatting.ITALIC;
-import static net.minecraftforge.fml.network.PacketDistributor.TRACKING_ENTITY_AND_SELF;
 
 import java.util.List;
 
@@ -15,7 +13,6 @@ import github.kingvampire.DeepTrenches.api.capabilities.taxonomy.ITaxonomy;
 import github.kingvampire.DeepTrenches.api.taxonomy.RankInstance;
 import github.kingvampire.DeepTrenches.api.taxonomy.SpeciesTaxon;
 import github.kingvampire.DeepTrenches.api.taxonomy.SubspeciesTaxon;
-import github.kingvampire.DeepTrenches.core.util.packets.TaxonomyCapabilityPacket;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.fish.AbstractFishEntity;
@@ -28,16 +25,15 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.PacketDistributor.PacketTarget;
 
 public class ModFishBucketItem extends FishBucketItem {
 
     protected EntityType<? extends AbstractFishEntity> type;
 
-    public ModFishBucketItem(EntityType<? extends AbstractFishEntity> fishTypeIn, Properties builder) {
-	super(fishTypeIn, WATER, builder);
+    public ModFishBucketItem(EntityType<? extends AbstractFishEntity> type, Properties builder) {
+	super(type, WATER, builder);
 
-	this.type = fishTypeIn;
+	this.type = type;
     }
 
     @Override
@@ -101,15 +97,11 @@ public class ModFishBucketItem extends FishBucketItem {
 		    if (tax.isPresent()) {
 			ITaxonomy itax = tax.orElseThrow(IllegalArgumentException::new);
 
-			if (itaxonomy.getSubspecies() != null) {
-			    PacketTarget target = TRACKING_ENTITY_AND_SELF.with(() -> entity);
-
+			if (itaxonomy.getSubspecies() != null)
 			    itax.setTaxonomyInstance(rank);
 
-			    INSTANCE.send(target, new TaxonomyCapabilityPacket(entity, rank));
-			}
-
 			entity.setFromBucket(true);
+			itax.sendPacket(entity);
 		    }
 		}
 	    }

@@ -3,29 +3,33 @@ package github.kingvampire.DeepTrenches.api.capabilities.group;
 import static github.kingvampire.DeepTrenches.api.capabilities.group.GroupProvider.GROUP_CAPABILITY;
 import static net.minecraft.entity.SharedMonsterAttributes.FOLLOW_RANGE;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class Group implements IGroup {
-
-    protected int maxGroupSize;
     
-    protected CreatureEntity creature;
-    protected Set<CreatureEntity> group;
+    protected final int maxGroupSize;
+
+    protected CreatureEntity creature;    
     protected CreatureEntity groupLeader;
+    protected Set<CreatureEntity> members;    
+    protected Map<CreatureEntity, Integer> memberTicks;
 
     public Group() {
-	this.group = Sets.newHashSet();
+	this.maxGroupSize = 3;
+	this.members = Sets.newHashSet();
     }
 
     public Group(CreatureEntity creature, int maxGroupSize) {
 	this.creature = creature;
-	this.group = Sets.newHashSet();
 	this.maxGroupSize = maxGroupSize;
+	this.members = Sets.newHashSet();
     }
 
     @Override
@@ -35,15 +39,15 @@ public class Group implements IGroup {
 
     @Override
     public boolean enterGroup(CreatureEntity creature) {
-	LazyOptional<IGroup> lazyOptional = creature.getCapability(GROUP_CAPABILITY);
+	LazyOptional<IGroup> group = creature.getCapability(GROUP_CAPABILITY);
 
-	if (lazyOptional.isPresent()) {
-	    IGroup group = lazyOptional.orElse(null);
+	if (group.isPresent()) {
+	    IGroup igroup = group.orElseThrow(IllegalArgumentException::new);
 
-	    if (this.canEnterGroup(group)) {
+	    if (this.canEnterGroup(igroup)) {
 		this.setGroupLeader(creature);
 
-		return group.getMembers().add(this.creature);
+		return igroup.getMembers().add(this.creature);
 	    }
 	}
 
@@ -56,23 +60,33 @@ public class Group implements IGroup {
     }
 
     @Override
-    public Set<CreatureEntity> getMembers() {
-	return this.group;
-    }
-
-    @Override
     public CreatureEntity getGroupLeader() {
 	return this.groupLeader;
     }
 
     @Override
     public int getGroupSize() {
-	return this.group.size();
+	return this.members.size();
     }
 
     @Override
     public int getMaxGroupSize() {
 	return this.maxGroupSize;
+    }
+
+    @Override
+    public Set<CreatureEntity> getMembers() {
+	return this.members;
+    }
+
+    @Override
+    public Map<CreatureEntity, Integer> getMemberTicks() {
+	return this.memberTicks;
+    }
+
+    @Override
+    public World getWorld() {
+	return this.getCreatureEntity().getEntityWorld();
     }
 
     @Override
@@ -84,7 +98,7 @@ public class Group implements IGroup {
     public boolean inRangeOfGroup() {
 	double range = this.creature.getAttribute(FOLLOW_RANGE).getBaseValue();
 
-	return this.group.stream().allMatch(creature -> creature.getDistanceSq(this.creature) <= range);
+	return this.members.stream().allMatch(creature -> creature.getDistanceSq(this.creature) <= range);
     }
 
     @Override
@@ -105,13 +119,13 @@ public class Group implements IGroup {
 	    if (this.groupLeader == null)
 		return true;
 
-	    LazyOptional<IGroup> lazyOptional = this.groupLeader.getCapability(GROUP_CAPABILITY);
+	    LazyOptional<IGroup> group = this.groupLeader.getCapability(GROUP_CAPABILITY);
 
 	    this.setGroup(Sets.newHashSet());
 	    this.setGroupLeader(null);
 
-	    if (lazyOptional.isPresent())
-		return lazyOptional.orElseThrow(IllegalArgumentException::new).getMembers().remove(this.creature);
+	    if (group.isPresent())
+		return group.orElseThrow(IllegalArgumentException::new).getMembers().remove(this.creature);
 	}
 
 	return false;
@@ -119,12 +133,17 @@ public class Group implements IGroup {
 
     @Override
     public void setGroup(Set<CreatureEntity> group) {
-	this.group = group;
+	this.members = group;
     }
 
     @Override
     public void setGroupLeader(CreatureEntity groupLeader) {
 	this.groupLeader = groupLeader;
+    }
+
+    @Override
+    public void setMemberTicks(Map<CreatureEntity, Integer> memberTicks) {
+	this.memberTicks = memberTicks;
     }
 
 }

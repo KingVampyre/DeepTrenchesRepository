@@ -4,12 +4,14 @@ import static net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE;
 
 import github.kingvampire.DeepTrenches.api.entity.goals.AvoidPlayerGoal;
 import github.kingvampire.DeepTrenches.api.entity.goals.GroupPanicGoal;
+import github.kingvampire.DeepTrenches.api.entity.goals.LureGoal;
 import github.kingvampire.DeepTrenches.api.entity.goals.UntameGroupSwimGoal;
 import github.kingvampire.DeepTrenches.core.entity.controllers.DragonfishLookController;
 import github.kingvampire.DeepTrenches.core.entity.controllers.DragonfishMovementController;
 import github.kingvampire.DeepTrenches.core.entity.goals.dragonfish.BlinkGoal;
 import github.kingvampire.DeepTrenches.core.entity.goals.dragonfish.DragonfishLureGoal;
 import github.kingvampire.DeepTrenches.core.entity.goals.dragonfish.RespondBlinkGoal;
+import github.kingvampire.DeepTrenches.core.init.ModAttributes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -97,7 +99,7 @@ public abstract class DragonfishEntity extends HatchetfishEntity {
 	this.getAttributes().registerAttribute(MIN_LURING);
 	this.getAttributes().registerAttribute(PREY_DETECTION);
 
-	this.getAttribute(RANDOM_SWIM_CHANCE).setBaseValue(35);
+	this.getAttribute(ModAttributes.RANDOM_SWIM_CHANCE).setBaseValue(35);
     }
 
     @Override

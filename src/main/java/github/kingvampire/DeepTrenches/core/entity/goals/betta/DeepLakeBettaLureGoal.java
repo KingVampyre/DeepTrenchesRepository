@@ -6,7 +6,7 @@ import static github.kingvampire.DeepTrenches.api.entity.DragonfishEntity.PREY_D
 
 import github.kingvampire.DeepTrenches.api.capabilities.group.IGroup;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
-import github.kingvampire.DeepTrenches.api.entity.LureGoal;
+import github.kingvampire.DeepTrenches.api.entity.goals.LureGoal;
 import github.kingvampire.DeepTrenches.core.entity.DeepLakeBettaEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityPredicate;

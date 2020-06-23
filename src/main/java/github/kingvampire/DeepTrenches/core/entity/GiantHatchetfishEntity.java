@@ -3,6 +3,7 @@ package github.kingvampire.DeepTrenches.core.entity;
 import static github.kingvampire.DeepTrenches.api.capabilities.lit.LitProvider.LIT_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.enums.LitState.ALL_LIT;
 import static github.kingvampire.DeepTrenches.api.enums.LitState.ALL_UNLIT;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.MOVEMENT_SPEED_BOOST;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.GIANT_HATCHETFISH;
 import static github.kingvampire.DeepTrenches.core.init.ModItems.GIANT_HATCHETFISH_BUCKET;
 import static net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH;
@@ -61,6 +62,7 @@ public class GiantHatchetfishEntity extends HatchetfishEntity {
 	this.goalSelector.addGoal(4, new FollowGroupLeaderGoal(this));
     }
 
+    @Override
     protected void updateLitState() {
 	LazyOptional<ILit> lit = this.getCapability(LIT_CAPABILITY);
 
@@ -74,8 +76,6 @@ public class GiantHatchetfishEntity extends HatchetfishEntity {
 		ilit.setLitState(ALL_LIT);
 	    else
 		ilit.setLitState(ALL_UNLIT);
-
-	    super.updateLitState();
 	}
 
     }

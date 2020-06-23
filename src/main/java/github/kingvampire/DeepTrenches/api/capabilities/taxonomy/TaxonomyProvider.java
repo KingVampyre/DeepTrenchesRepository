@@ -1,5 +1,6 @@
 package github.kingvampire.DeepTrenches.api.capabilities.taxonomy;
 
+import github.kingvampire.DeepTrenches.api.taxonomy.Rank;
 import github.kingvampire.DeepTrenches.api.taxonomy.RankInstance;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -17,6 +18,10 @@ public class TaxonomyProvider implements ICapabilitySerializable<CompoundNBT> {
 
     public TaxonomyProvider() {
 	this.taxonomy = LazyOptional.of(Taxonomy::new);
+    }
+
+    public TaxonomyProvider(Rank rank) {
+	this.taxonomy = LazyOptional.of(() -> new Taxonomy(rank.getDefaultInstance()));
     }
 
     public TaxonomyProvider(RankInstance taxonomyRank) {

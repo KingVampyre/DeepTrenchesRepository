@@ -15,7 +15,7 @@ import com.google.common.base.Predicates;
 import github.kingvampire.DeepTrenches.api.capabilities.anger.IAnger;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
 import github.kingvampire.DeepTrenches.api.entity.DragonfishEntity;
-import github.kingvampire.DeepTrenches.api.entity.LureGoal;
+import github.kingvampire.DeepTrenches.api.entity.goals.LureGoal;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.util.math.AxisAlignedBB;

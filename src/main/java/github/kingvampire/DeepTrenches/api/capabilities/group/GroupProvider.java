@@ -13,10 +13,15 @@ public class GroupProvider implements ICapabilitySerializable<CompoundNBT> {
     @CapabilityInject(IGroup.class)
     public static final Capability<IGroup> GROUP_CAPABILITY = null;
 
-    private final LazyOptional<IGroup> group;
+    protected LazyOptional<IGroup> group;
 
     public GroupProvider(CreatureEntity entity, int maxGroupSize) {
 	this.group = LazyOptional.of(() -> new Group(entity, maxGroupSize));
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+	GROUP_CAPABILITY.readNBT(this.group.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
     @Override
@@ -27,11 +32,6 @@ public class GroupProvider implements ICapabilitySerializable<CompoundNBT> {
     @Override
     public CompoundNBT serializeNBT() {
 	return (CompoundNBT) GROUP_CAPABILITY.writeNBT(this.group.orElseThrow(IllegalArgumentException::new), null);
-    }
-
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-	GROUP_CAPABILITY.readNBT(this.group.orElseThrow(IllegalArgumentException::new), null, nbt);
     }
 
 }

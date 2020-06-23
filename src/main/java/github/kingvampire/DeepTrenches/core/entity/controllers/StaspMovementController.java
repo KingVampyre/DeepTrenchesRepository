@@ -21,7 +21,7 @@ public class StaspMovementController extends FlyingMovementController {
 
     @Override
     public void tick() {
-
+	
 	if (this.action == MOVE_TO) {
 	    this.action = WAIT;
 

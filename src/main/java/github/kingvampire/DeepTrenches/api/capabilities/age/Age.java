@@ -54,7 +54,6 @@ public class Age implements IAge {
 	    this.onGrowingAdult();
 
 	this.growingAge = growingAge;
-	this.sendPacket();
     }
 
 }

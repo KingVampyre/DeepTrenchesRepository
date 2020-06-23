@@ -8,6 +8,7 @@ import static net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH;
 import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 import static net.minecraft.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE;
 
+import github.kingvampire.DeepTrenches.core.init.ModAttributes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
@@ -16,8 +17,10 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 
 public class SmalltoothDragonfishEntity extends BlackLoosejawEntity {
 
-    public static final AttributeModifier NEG_SUBORBITAL_BOOST = new AttributeModifier("smalltoothDragonfish.negSuborbitalBoost", 0.55, MULTIPLY_BASE);
-    public static final AttributeModifier SUBORBITAL_BOOST = new AttributeModifier("smalltoothDragonfish.suborbitalBoost", 0.45, MULTIPLY_BASE);
+    public static final AttributeModifier NEG_SUBORBITAL_BOOST = new AttributeModifier(
+	    "smalltoothDragonfish.negSuborbitalBoost", 0.55, MULTIPLY_BASE);
+    public static final AttributeModifier SUBORBITAL_BOOST = new AttributeModifier(
+	    "smalltoothDragonfish.suborbitalBoost", 0.45, MULTIPLY_BASE);
 
     public SmalltoothDragonfishEntity(EntityType<? extends SmalltoothDragonfishEntity> type, World worldIn) {
 	super(type, worldIn);
@@ -50,7 +53,7 @@ public class SmalltoothDragonfishEntity extends BlackLoosejawEntity {
 	this.getAttribute(FOLLOW_RANGE).setBaseValue(6); // 16
 	this.getAttribute(MAX_HEALTH).setBaseValue(18);
 	this.getAttribute(MOVEMENT_SPEED).setBaseValue(1.24F);
-	this.getAttribute(MOVEMENT_SPEED_BOOST).setBaseValue(2.58F);
+	this.getAttribute(ModAttributes.MOVEMENT_SPEED_BOOST).setBaseValue(2.58F);
 
 	this.getAttribute(BLINK_INTERVAL).setBaseValue(3);
 	this.getAttribute(BLINK_RANGE).setBaseValue(12);
@@ -67,6 +70,7 @@ public class SmalltoothDragonfishEntity extends BlackLoosejawEntity {
 	this.getAttribute(MAX_LURING).setBaseValue(2); // 6
 	this.getAttribute(MIN_LURING).setBaseValue(1); // 3
 
+	this.getAttribute(DROP_TOOTH_CHANCE).setBaseValue(0.4F);
 	this.getAttribute(PREY_DETECTION).setBaseValue(1.25F); // 3
 
 	this.getAttribute(SUBORBITAL_DELAY).setBaseValue(270);

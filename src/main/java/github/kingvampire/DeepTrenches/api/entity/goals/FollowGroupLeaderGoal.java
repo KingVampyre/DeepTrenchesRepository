@@ -75,7 +75,8 @@ public class FollowGroupLeaderGoal extends Goal {
 		.map(group -> group.orElseThrow(IllegalArgumentException::new))
 		.collect(Collectors.toList());
 
-	List<IGroup> leaders = bettas.stream().filter(igroup -> igroup.isGroupLeader())
+	List<IGroup> leaders = bettas.stream()
+		.filter(igroup -> igroup.isGroupLeader())
 		.filter(igroup -> igroup.getGroupSize() < igroup.getMaxGroupSize())
 		.sorted(Comparator.comparing(igroup -> this.creature.getDistanceSq(igroup.getCreatureEntity())))
 		.collect(Collectors.toList());

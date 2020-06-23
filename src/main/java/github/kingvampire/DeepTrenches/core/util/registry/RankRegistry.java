@@ -1,13 +1,15 @@
 package github.kingvampire.DeepTrenches.core.util.registry;
 
+import static github.kingvampire.DeepTrenches.core.init.ModTaxons.STORCEANOVESPIIDAE;
+import static github.kingvampire.DeepTrenches.core.init.ModTaxons.APOPLIXIOVESPA;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.ARGYROPELECUS;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.ARGYROPELECUS_GIGAS;
+import static github.kingvampire.DeepTrenches.core.init.ModTaxons.BARBELED_LOOSEJAW;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.BETTA;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.BETTA_SPLENDIDENS;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.BETTA_TRELOSIAGNUS;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.BLACK_LOOSEJAW;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.LIGHT_LOOSEJAW;
-import static github.kingvampire.DeepTrenches.core.init.ModTaxons.BARBELED_LOOSEJAW;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.MALACOSTEUS;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.OSPHRONEMIDAE;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.PACHYSTOMIAS;
@@ -16,6 +18,8 @@ import static github.kingvampire.DeepTrenches.core.init.ModTaxons.PERCIFORMES;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.STERNOPTYCHIDAE;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.STOMIIDAE;
 import static github.kingvampire.DeepTrenches.core.init.ModTaxons.STOMIIFORMES;
+import static github.kingvampire.DeepTrenches.core.init.ModTaxons.STORCEANOVESPIIFORMES;
+import static github.kingvampire.DeepTrenches.core.init.ModTaxons.APOPLIXIOVESPA_SPECIES;
 import static github.kingvampire.DeepTrenches.core.util.Constants.MODID;
 import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
 
@@ -47,6 +51,13 @@ public class RankRegistry {
 		.genus(BETTA)
 		.species(BETTA_SPLENDIDENS)
 		.build(new ResourceLocation(MODID, "betta"));
+	
+	Rank blackLoosejaw = new Rank.Builder()
+		.order(STOMIIFORMES)
+		.family(STOMIIDAE)
+		.genus(MALACOSTEUS)
+		.species(BLACK_LOOSEJAW)
+		.build(new ResourceLocation(MODID, "black_loosejaw"));
 
 	Rank deepLakeBetta = new Rank.Builder()
 		.order(PERCIFORMES)
@@ -54,13 +65,13 @@ public class RankRegistry {
 		.genus(BETTA)
 		.species(BETTA_TRELOSIAGNUS)
 		.build(new ResourceLocation(MODID, "deep_lake_betta"));
-
-	Rank blackLoosejaw = new Rank.Builder()
+	
+	Rank giantHatchetfish = new Rank.Builder()
 		.order(STOMIIFORMES)
-		.family(STOMIIDAE)
-		.genus(MALACOSTEUS)
-		.species(BLACK_LOOSEJAW)
-		.build(new ResourceLocation(MODID, "black_loosejaw"));
+		.family(STERNOPTYCHIDAE)
+		.genus(ARGYROPELECUS)
+		.species(ARGYROPELECUS_GIGAS)
+		.build(new ResourceLocation(MODID, "giant_hatchetfish"));
 
 	Rank lightLoosejaw = new Rank.Builder()
 		.order(STOMIIFORMES)
@@ -75,16 +86,15 @@ public class RankRegistry {
 		.genus(PACHYSTOMIAS)
 		.species(PACHYSTOMIAS_MICRODON)
 		.build(new ResourceLocation(MODID, "smalltooth_dragonfish"));
+	
+	Rank stasp = new Rank.Builder()
+		.order(STORCEANOVESPIIFORMES)
+		.family(STORCEANOVESPIIDAE)
+		.genus(APOPLIXIOVESPA)
+		.species(APOPLIXIOVESPA_SPECIES)
+		.build(new ResourceLocation(MODID, "stasp"));
 
-	Rank giantHatchetfish = new Rank.Builder()
-		.order(STOMIIFORMES)
-		.family(STERNOPTYCHIDAE)
-		.genus(ARGYROPELECUS)
-		.species(ARGYROPELECUS_GIGAS)
-		.build(new ResourceLocation(MODID, "giant_hatchetfish"));
-
-	registry.registerAll(betta, deepLakeBetta, blackLoosejaw, lightLoosejaw, barbeledLoosejaw, smalltoothDragonfish,
-		giantHatchetfish);
+	registry.registerAll(barbeledLoosejaw, betta, deepLakeBetta, blackLoosejaw, giantHatchetfish, lightLoosejaw, smalltoothDragonfish, stasp);
 
     }
 

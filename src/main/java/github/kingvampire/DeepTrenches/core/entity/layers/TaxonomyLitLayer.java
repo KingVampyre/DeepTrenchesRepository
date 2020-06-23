@@ -34,15 +34,11 @@ public class TaxonomyLitLayer<T extends LivingEntity, M extends EntityModel<T>> 
 	    ILit ilit = lit.orElseThrow(IllegalArgumentException::new);
 	    ITaxonomy itaxonomy = taxonomy.orElseThrow(IllegalArgumentException::new);
 
-	    String family = itaxonomy.getFamily().getVulgarName();
-	    String genus = itaxonomy.getGenus().getVulgarName();
-	    String order = itaxonomy.getOrder().getVulgarName();
-	    String species = itaxonomy.getSpecies().getVulgarName();
-
 	    SubspeciesTaxon subspecies = itaxonomy.getSubspecies();
 	    LitState litState = ilit.getLitState();
 
-	    String rank = String.format("textures/entity/%1$s/%2$s/%3$s/%4$s", order, family, genus, species);
+	    ResourceLocation id = entityIn.getType().getRegistryName();
+	    String rank = "textures/entity/" + id.getPath();
 
 	    if (subspecies != null) {
 		String subspicies = subspecies.getVulgarName();

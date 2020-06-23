@@ -1,7 +1,7 @@
 package github.kingvampire.DeepTrenches.api.entity.goals;
 
 import static github.kingvampire.DeepTrenches.api.capabilities.tame.TameProvider.TAME_CAPABILITY;
-import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.RANDOM_SWIM_CHANCE;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.RANDOM_SWIM_CHANCE;
 
 import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
 import net.minecraft.entity.CreatureEntity;

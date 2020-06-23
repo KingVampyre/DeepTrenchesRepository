@@ -15,6 +15,7 @@ import github.kingvampire.DeepTrenches.core.taxonomy.genus.BettaGenus;
 import github.kingvampire.DeepTrenches.core.taxonomy.genus.BigeyeLoosejawsGenus;
 import github.kingvampire.DeepTrenches.core.taxonomy.genus.MalacosteusGenus;
 import github.kingvampire.DeepTrenches.core.taxonomy.genus.SilverHatchetfishGenus;
+import github.kingvampire.DeepTrenches.core.taxonomy.species.ApoplixiovespaSpecies;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +31,13 @@ public class TaxonRegistry {
 
 	OrderTaxon stomiiformes = new OrderTaxon("stomiiformes");
 
+	// Betta and Deep Lake Betta
+	OrderTaxon perciformes = new OrderTaxon("perciformes");
+	FamilyTaxon osphronemidae = new FamilyTaxon("osphronemidae", "gouramis");
+	GenusTaxon betta = new BettaGenus();
+
+	perciformes.addFamily(osphronemidae.addGenus(betta));
+	
 	// Giant Hatchetfish, Loosejaws, and Smalltooth Dragonfish
 	FamilyTaxon stomiidae = new FamilyTaxon("stomiidae");
 	FamilyTaxon sternoptychidae = new FamilyTaxon("sternoptychidae", "hatchetfishes");
@@ -40,15 +48,16 @@ public class TaxonRegistry {
 
 	stomiiformes.addFamily(sternoptychidae.addGenus(argyropelecus), stomiidae.addGenus(malacosteus, pachystomias));
 
-	// Betta and Deep Lake Betta
-	OrderTaxon perciformes = new OrderTaxon("perciformes");
-	FamilyTaxon osphronemidae = new FamilyTaxon("osphronemidae", "gouramis");
-	GenusTaxon betta = new BettaGenus();
+	// Stasp
+	OrderTaxon storceanovespiiformes = new OrderTaxon("storceanovespiiformes");
+	FamilyTaxon storceanovespiidae = new FamilyTaxon("storceanovespiidae");
+	GenusTaxon apoplixiovespa = new GenusTaxon("apoplixiovespa", "shockwasps");
+	SpeciesTaxon apoplixiovespaSpecies = new ApoplixiovespaSpecies();
 
-	perciformes.addFamily(osphronemidae.addGenus(betta));
+	storceanovespiiformes.addFamily(storceanovespiidae.addGenus(apoplixiovespa.addSpecies(apoplixiovespaSpecies)));
 
 	// Register All
-	Lists.newArrayList(perciformes, stomiiformes)
+	Lists.newArrayList(perciformes, stomiiformes, storceanovespiiformes)
 		.stream()
 		.peek(registry::register)
 		.map(OrderTaxon::getFamilies)

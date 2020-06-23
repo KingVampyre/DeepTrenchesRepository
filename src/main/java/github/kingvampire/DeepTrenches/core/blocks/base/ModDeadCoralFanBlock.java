@@ -23,85 +23,85 @@ import net.minecraft.world.World;
 
 public class ModDeadCoralFanBlock extends AbstractCoralPlantBlock {
 
-	public ModDeadCoralFanBlock(Properties properties) {
-		super(properties);
+    public ModDeadCoralFanBlock(Properties properties) {
+	super(properties);
+    }
+
+    @Override
+    protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	super.fillStateContainer(builder);
+
+	builder.add(FACING_EXCEPT_UP);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+
+	switch (state.get(FACING_EXCEPT_UP)) {
+	case EAST:
+	    return Block.makeCuboidShape(0, 4, 0, 11, 12, 16);
+	case NORTH:
+	    return Block.makeCuboidShape(0, 4, 5, 16, 12, 16);
+	case SOUTH:
+	    return Block.makeCuboidShape(0, 4, 0, 16, 12, 11);
+	case DOWN:
+	    return Block.makeCuboidShape(2, 0, 2, 14, 4, 14);
+	case WEST:
+	    return Block.makeCuboidShape(5, 4, 0, 16, 12, 16);
+	default:
+	    return null;
+	}
+    }
+
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+	World world = context.getWorld();
+	BlockPos pos = context.getPos();
+
+	BlockState state = super.getStateForPlacement(context);
+	BlockState under = world.getBlockState(pos.down());
+
+	for (Direction direction : context.getNearestLookingDirections()) {
+
+	    if (direction.getAxis().isHorizontal()) {
+		state = state.with(FACING_EXCEPT_UP, direction.getOpposite());
+
+		if (state.isValidPosition(world, pos))
+		    return state;
+	    }
+
+	    if (direction == DOWN && under.getBlock() != this.getBlock()) {
+		state = state.with(FACING_EXCEPT_UP, DOWN);
+
+		if (state.isValidPosition(world, pos) && under.getBlock() != AIR && under.getBlock() != WATER)
+		    return state;
+	    }
 	}
 
-	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	return null;
+    }
 
-		builder.add(FACING_EXCEPT_UP);
-	}
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	Direction direction = state.get(FACING_EXCEPT_UP);
+	BlockPos offset = pos.offset(direction.getOpposite());
 
-	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	if (direction == DOWN)
+	    return super.isValidPosition(state, worldIn, pos);
 
-		switch (state.get(FACING_EXCEPT_UP)) {
-		case EAST:
-			return Block.makeCuboidShape(0.0D, 4.0D, 0.0D, 11.0D, 12.0D, 16.0D);
-		case NORTH:
-			return Block.makeCuboidShape(0.0D, 4.0D, 5.0D, 16.0D, 12.0D, 16.0D);
-		case SOUTH:
-			return Block.makeCuboidShape(0.0D, 4.0D, 0.0D, 16.0D, 12.0D, 11.0D);
-		case DOWN:
-			return Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
-		case WEST:
-			return Block.makeCuboidShape(5.0D, 4.0D, 0.0D, 16.0D, 12.0D, 16.0D);
-		default:
-			return null;
-		}
-	}
+	return Block.hasSolidSide(worldIn.getBlockState(offset), worldIn, offset, direction);
+    }
 
-	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	    BlockPos currentPos, BlockPos facingPos) {
 
-		BlockState state = super.getStateForPlacement(context);
-		BlockState under = world.getBlockState(pos.down());
+	Direction direction = stateIn.get(FACING_EXCEPT_UP);
 
-		for (Direction direction : context.getNearestLookingDirections()) {
+	if (facing.getOpposite() == direction)
+	    return !stateIn.isValidPosition(worldIn, currentPos) ? AIR.getDefaultState() : stateIn;
 
-			if (direction.getAxis().isHorizontal()) {
-				state = state.with(FACING_EXCEPT_UP, direction.getOpposite());
-
-				if (state.isValidPosition(world, pos))
-					return state;
-			}
-
-			if (direction == DOWN && under.getBlock() != this.getBlock()) {
-				state = state.with(FACING_EXCEPT_UP, DOWN);
-
-				if (state.isValidPosition(world, pos) && under.getBlock() != AIR && under.getBlock() != WATER)
-					return state;
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction direction = state.get(FACING_EXCEPT_UP);
-		BlockPos offset = pos.offset(direction.getOpposite());
-
-		if (direction == DOWN)
-			return super.isValidPosition(state, worldIn, pos);
-
-		return Block.hasSolidSide(worldIn.getBlockState(offset), worldIn, offset, direction);
-	}
-
-	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
-			BlockPos currentPos, BlockPos facingPos) {
-
-		Direction direction = stateIn.get(FACING_EXCEPT_UP);
-
-		if (facing.getOpposite() == direction)
-			return !stateIn.isValidPosition(worldIn, currentPos) ? AIR.getDefaultState() : stateIn;
-
-		return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-	}
+	return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
 
 }

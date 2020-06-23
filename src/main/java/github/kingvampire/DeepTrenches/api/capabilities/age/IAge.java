@@ -3,12 +3,17 @@ package github.kingvampire.DeepTrenches.api.capabilities.age;
 import static github.kingvampire.DeepTrenches.api.capabilities.age.AgeProvider.AGE_CAPABILITY;
 import static net.minecraft.entity.SpawnReason.BREEDING;
 import static net.minecraft.particles.ParticleTypes.HAPPY_VILLAGER;
+import static net.minecraftforge.fml.network.PacketDistributor.TRACKING_ENTITY_AND_SELF;
 
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import github.kingvampire.DeepTrenches.api.capabilities.IPacketSender;
+import github.kingvampire.DeepTrenches.core.util.NetworkHandler;
+import github.kingvampire.DeepTrenches.core.util.packets.CapabilityPacket;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -20,7 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
-public interface IAge {
+public interface IAge extends IPacketSender {
 
     default void addGrowth(int growth) {
 	this.ageUp(growth, false);
@@ -51,7 +56,7 @@ public interface IAge {
 	BlockPos pos = creature.getPosition();
 	World world = creature.getEntityWorld();
 
-	return (CreatureEntity) creature.getType().spawn(world, null, null, pos, BREEDING, true, false);
+	return (CreatureEntity) creature.getType().spawn(world, null, null, pos, BREEDING, false, false);
     }
 
     CreatureEntity getCreatureEntity();
@@ -100,7 +105,6 @@ public interface IAge {
 	    else if (growingAge > 0)
 		this.setGrowingAge(--growingAge);
 
-	    this.sendPacket();
 	}
 
     }
@@ -141,15 +145,11 @@ public interface IAge {
 			ageable.setGrowingAge(-24000);
 			child.setLocationAndAngles(x, y, z, 0, 0);
 
-			world.addEntity(child);
-
 			if (stack.hasDisplayName())
 			    child.setCustomName(stack.getDisplayName());
 
 			if (!player.abilities.isCreativeMode)
 			    stack.shrink(1);
-
-			this.sendPacket();
 		    }
 		}
 	    }
@@ -160,12 +160,12 @@ public interface IAge {
 	return false;
     }
 
-    default void sendPacket() {
-	// TODO send packet
-	// CreatureEntity creature = this.getCreatureEntity();
-	// AgeCapabilityPacket packet = new AgeCapabilityPacket(creature, this);
+    @Override
+    default void sendPacket(Entity entity) {
+	CompoundNBT compound = (CompoundNBT) AGE_CAPABILITY.writeNBT(this, null);
+	CapabilityPacket packet = new CapabilityPacket(AGE_CAPABILITY, entity, compound);
 
-	// INSTANCE.send(TRACKING_ENTITY_AND_SELF.with(() -> creature), packet);
+	NetworkHandler.INSTANCE.send(TRACKING_ENTITY_AND_SELF.with(() -> entity), packet);
     }
 
     void setForcedAge(int forcedAge);

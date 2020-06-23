@@ -6,7 +6,7 @@ import static github.kingvampire.DeepTrenches.api.capabilities.breed.BreedProvid
 import static github.kingvampire.DeepTrenches.api.capabilities.group.GroupProvider.GROUP_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.tame.TameProvider.TAME_CAPABILITY;
 import static github.kingvampire.DeepTrenches.api.capabilities.taxonomy.TaxonomyProvider.TAXONOMY_CAPABILITY;
-import static github.kingvampire.DeepTrenches.api.entity.HatchetfishEntity.MOVEMENT_SPEED_BOOST;
+import static github.kingvampire.DeepTrenches.core.init.ModAttributes.MOVEMENT_SPEED_BOOST;
 import static github.kingvampire.DeepTrenches.core.init.ModEntities.BETTA;
 import static github.kingvampire.DeepTrenches.core.init.ModItems.BETTA_BUCKET;
 import static net.minecraft.entity.SharedMonsterAttributes.ATTACK_DAMAGE;
@@ -14,6 +14,7 @@ import static net.minecraft.entity.SharedMonsterAttributes.MAX_HEALTH;
 import static net.minecraft.entity.SharedMonsterAttributes.MOVEMENT_SPEED;
 
 import github.kingvampire.DeepTrenches.api.capabilities.age.IAge;
+import github.kingvampire.DeepTrenches.api.capabilities.anger.IAnger;
 import github.kingvampire.DeepTrenches.api.capabilities.breed.IBreed;
 import github.kingvampire.DeepTrenches.api.capabilities.tame.ITame;
 import github.kingvampire.DeepTrenches.api.entity.goals.AngryAttackGoal;
@@ -150,25 +151,31 @@ public class BettaEntity extends AbstractFishEntity {
     public void livingTick() {
 	super.livingTick();
 
-	this.getCapability(AGE_CAPABILITY).ifPresent(iage -> {
+	LazyOptional<IAge> age = this.getCapability(AGE_CAPABILITY);
+	LazyOptional<IAnger> anger = this.getCapability(ANGER_CAPABILITY);
+	LazyOptional<IBreed> breed = this.getCapability(BREED_CAPABILITY);
+
+	if (age.isPresent() && anger.isPresent() && breed.isPresent()) {
+	    IAge iage = age.orElseThrow(IllegalArgumentException::new);
+	    IAnger ianger = anger.orElseThrow(IllegalArgumentException::new);
+	    IBreed ibreed = breed.orElseThrow(IllegalArgumentException::new);
+
 	    iage.livingTick();
-
-	    this.getCapability(BREED_CAPABILITY).ifPresent(ibreed -> {
-		ibreed.livingTick(iage);
-
-		if (!this.world.isRemote())
-		    this.world.setEntityState(this, (byte) 8);
-
-	    });
-	});
-
-	this.getCapability(ANGER_CAPABILITY).ifPresent(ianger -> {
 	    ianger.livingTick();
+	    ibreed.livingTick(iage);
 
-	    if (!this.world.isRemote && this.getAttackTarget() == null && ianger.isAngry())
-		ianger.setAnger(0);
+	    if (!this.world.isRemote()) {
+		this.world.setEntityState(this, (byte) 8);
 
-	});
+		if (this.getAttackTarget() == null && ianger.isAngry())
+		    ianger.setAnger(0);
+
+		iage.sendPacket(this);
+		ianger.sendPacket(this);
+		ibreed.sendPacket(this);
+	    }
+	}
+
     }
 
     @Override
